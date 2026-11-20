@@ -1,0 +1,11 @@
+# The app lives in the hidden-word/ subfolder. It is a static site with no
+# build step: the files in public/ are published as-is, plus one function.
+[build]
+  base = "hidden-word"
+  publish = "public"
+  functions = "netlify/functions"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
