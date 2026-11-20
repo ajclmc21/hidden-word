@@ -12,8 +12,15 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Hidden Word</title>
+<meta property="og:title" content="Hidden Word: memorize Scripture, your way">
+<meta property="og:description" content="Hide God’s Word in your heart, one verse at a time. Memorize it with me.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hidden-word-tbif.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&family=Caveat:wght@600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 <style>
 :root{--cream:#F7F2E8;--paper:#FFFDF8;--line:#E6DDC9;--line2:#D9CCAE;--ink:#2B2A26;--ink2:#4A463E;--muted:#6B655A;--olive:#4F5D3A;--gold:#B08A3E;--goldtext:#7A5D1F;--sand:#EFE6D2;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Nunito',system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box}
@@ -101,9 +108,17 @@ label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:70
 canvas.preview{width:100%;max-width:240px;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(60,50,30,.18);align-self:center}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;z-index:9;max-width:90vw;text-align:center}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.round.speaking{background:var(--olive);color:#FBF8F1;border-color:var(--olive)}
+.bgrow{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;margin:0 -22px;padding-left:22px;padding-right:22px}
+.bgt{flex:0 0 52px;height:52px;border-radius:14px;border:1px solid rgba(0,0,0,.12);cursor:pointer}
+.bgt.on{outline:3px solid var(--olive);outline-offset:2px}
+.fontrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fontt{min-height:64px;border-radius:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-family:inherit}
+.fontt.on{border:2px solid var(--olive)}
+input[type=range]{width:100%;height:32px}
 .handle{width:44px;height:44px;margin-left:-10px;border:none;background:none;color:#9A907E;touch-action:none;cursor:grab;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:12px}
 .handle:active{cursor:grabbing}
-.ghost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;box-shadow:0 14px 34px rgba(60,50,30,.25);opacity:.96;margin:0}
+.drag-ghost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;box-shadow:0 14px 34px rgba(60,50,30,.25);opacity:.96;margin:0}
 .dragging{opacity:.35}
 [data-drop].over{border:2px solid var(--olive);background:#F1F3EA;transform:scale(1.02)}
 [data-drop]{transition:transform .12s,background .12s}
@@ -115,8 +130,8 @@ body.is-dragging{user-select:none;-webkit-user-select:none}
 <body>
 <main id="app" aria-live="polite"></main>
 <nav id="tabs" aria-label="Main">
-  <a href="#home" data-tab="home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6c3-1 6-1 9 1 3-2 6-2 9-1v12c-3-1-6-1-9 1-3-2-6-2-9-1zM12 7v12"/></svg>Learn</a>
-  <a href="#verses" data-tab="verses"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>My Verses</a>
+  <a href="#home" data-tab="home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6c3-1 6-1 9 1 3-2 6-2 9-1v12c-3-1-6-1-9 1-3-2-6-2-9-1zM12 7v12"/></svg>Today</a>
+  <a href="#verses" data-tab="verses"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Collections</a>
   <a href="#progress" data-tab="progress"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14zM5 19l7-7"/></svg>Progress</a>
   <a href="#versions" data-tab="versions"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>Settings</a>
 </nav>
@@ -158,9 +173,100 @@ const VERSES = [
   ['MAT.7.7','Matthew 7:7','Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.'],
   ['JER.33.3','Jeremiah 33:3','Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.'],
   ['PSA.145.18','Psalm 145:18','The LORD is nigh unto all them that call upon him, to all that call upon him in truth.'],
+  ['PRO.22.6','Proverbs 22:6','Train up a child in the way he should go: and when he is old, he will not depart from it.'],
+  ['3JN.1.4','3 John 1:4','I have no greater joy than to hear that my children walk in truth.'],
+  ['PSA.127.3','Psalm 127:3','Lo, children are an heritage of the LORD: and the fruit of the womb is his reward.'],
+  ['ISA.54.13','Isaiah 54:13','And all thy children shall be taught of the LORD; and great shall be the peace of thy children.'],
+  ['ECC.4.12','Ecclesiastes 4:12','And if one prevail against him, two shall withstand him; and a threefold cord is not quickly broken.'],
+  ['COL.3.14','Colossians 3:14','And above all these things put on charity, which is the bond of perfectness.'],
+  ['1PE.4.8','1 Peter 4:8','And above all things have fervent charity among yourselves: for charity shall cover the multitude of sins.'],
+  ['PSA.34.18','Psalm 34:18','The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.'],
+  ['2CO.12.9','2 Corinthians 12:9','And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me.'],
   ['ROM.8.28','Romans 8:28','And we know that all things work together for good to them that love God, to them who are the called according to his purpose.']
 ];
 const LIB = {}; VERSES.forEach(v => { LIB[v[0]] = { id: v[0], ref: v[1], text: v[2] }; });
+
+/* ---------- Passages (KJV) ---------- */
+const PASSAGES = [
+  { id: 'fruit', name: 'Fruit of the Spirit', book: 'GAL', bookName: 'Galatians', ch: 5, icon: 'leaf', kids: true, desc: 'What the Spirit grows in us.', v: [
+    [22, 'But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,'],
+    [23, 'Meekness, temperance: against such there is no law.']] },
+  { id: 'separate', name: 'Nothing Can Separate Us', book: 'ROM', bookName: 'Romans', ch: 8, icon: 'heart', desc: 'Nothing can pull you from God’s love.', v: [
+    [38, 'For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come,'],
+    [39, 'Nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.']] },
+  { id: 'commission', name: 'The Great Commission', book: 'MAT', bookName: 'Matthew', ch: 28, icon: 'sunrise', desc: 'Jesus sends His disciples into the world.', v: [
+    [18, 'And Jesus came and spake unto them, saying, All power is given unto me in heaven and in earth.'],
+    [19, 'Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost:'],
+    [20, 'Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.']] },
+  { id: 'love', name: 'The Love Chapter', book: '1CO', bookName: '1 Corinthians', ch: 13, icon: 'heart', desc: 'What real love looks like. (The KJV says “charity” for love.)', v: [
+    [4, 'Charity suffereth long, and is kind; charity envieth not; charity vaunteth not itself, is not puffed up,'],
+    [5, 'Doth not behave itself unseemly, seeketh not her own, is not easily provoked, thinketh no evil;'],
+    [6, 'Rejoiceth not in iniquity, but rejoiceth in the truth;'],
+    [7, 'Beareth all things, believeth all things, hopeth all things, endureth all things.']] },
+  { id: 'eagles', name: 'On Wings Like Eagles', book: 'ISA', bookName: 'Isaiah', ch: 40, icon: 'sunrise', desc: 'Strength for weary days.', v: [
+    [28, 'Hast thou not known? hast thou not heard, that the everlasting God, the LORD, the Creator of the ends of the earth, fainteth not, neither is weary? there is no searching of his understanding.'],
+    [29, 'He giveth power to the faint; and to them that have no might he increaseth strength.'],
+    [30, 'Even the youths shall faint and be weary, and the young men shall utterly fall:'],
+    [31, 'But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.']] },
+  { id: 'lordsprayer', name: 'The Lord’s Prayer', book: 'MAT', bookName: 'Matthew', ch: 6, icon: 'flame', kids: true, desc: 'The prayer Jesus taught His disciples.', v: [
+    [9, 'After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name.'],
+    [10, 'Thy kingdom come. Thy will be done in earth, as it is in heaven.'],
+    [11, 'Give us this day our daily bread.'],
+    [12, 'And forgive us our debts, as we forgive our debtors.'],
+    [13, 'And lead us not into temptation, but deliver us from evil: For thine is the kingdom, and the power, and the glory, for ever. Amen.']] },
+  { id: 'psalm23', name: 'Psalm 23', book: 'PSA', bookName: 'Psalm', ch: 23, icon: 'leaf', kids: true, desc: 'The Lord is my shepherd.', v: [
+    [1, 'The LORD is my shepherd; I shall not want.'],
+    [2, 'He maketh me to lie down in green pastures: he leadeth me beside the still waters.'],
+    [3, 'He restoreth my soul: he leadeth me in the paths of righteousness for his name’s sake.'],
+    [4, 'Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.'],
+    [5, 'Thou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.'],
+    [6, 'Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.']] },
+  { id: 'armor', name: 'The Armor of God', book: 'EPH', bookName: 'Ephesians', ch: 6, icon: 'shield', kids: true, desc: 'Every piece is a picture: belt, breastplate, shoes, shield, helmet, sword.', v: [
+    [10, 'Finally, my brethren, be strong in the Lord, and in the power of his might.'],
+    [11, 'Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.'],
+    [12, 'For we wrestle not against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this world, against spiritual wickedness in high places.'],
+    [13, 'Wherefore take unto you the whole armour of God, that ye may be able to withstand in the evil day, and having done all, to stand.'],
+    [14, 'Stand therefore, having your loins girt about with truth, and having on the breastplate of righteousness;'],
+    [15, 'And your feet shod with the preparation of the gospel of peace;'],
+    [16, 'Above all, taking the shield of faith, wherewith ye shall be able to quench all the fiery darts of the wicked.'],
+    [17, 'And take the helmet of salvation, and the sword of the Spirit, which is the word of God:'],
+    [18, 'Praying always with all prayer and supplication in the Spirit, and watching thereunto with all perseverance and supplication for all saints;']] },
+  { id: 'beatitudes', name: 'The Beatitudes', book: 'MAT', bookName: 'Matthew', ch: 5, icon: 'sunrise', desc: 'The heart of the Sermon on the Mount.', v: [
+    [3, 'Blessed are the poor in spirit: for theirs is the kingdom of heaven.'],
+    [4, 'Blessed are they that mourn: for they shall be comforted.'],
+    [5, 'Blessed are the meek: for they shall inherit the earth.'],
+    [6, 'Blessed are they which do hunger and thirst after righteousness: for they shall be filled.'],
+    [7, 'Blessed are the merciful: for they shall obtain mercy.'],
+    [8, 'Blessed are the pure in heart: for they shall see God.'],
+    [9, 'Blessed are the peacemakers: for they shall be called the children of God.'],
+    [10, 'Blessed are they which are persecuted for righteousness’ sake: for theirs is the kingdom of heaven.'],
+    [11, 'Blessed are ye, when men shall revile you, and persecute you, and shall say all manner of evil against you falsely, for my sake.'],
+    [12, 'Rejoice, and be exceeding glad: for great is your reward in heaven: for so persecuted they the prophets which were before you.']] },
+  { id: 'commandments', name: 'The Ten Commandments', book: 'EXO', bookName: 'Exodus', ch: 20, icon: 'book', desc: 'The foundation God gave His people at Sinai.', v: [
+    [1, 'And God spake all these words, saying,'],
+    [2, 'I am the LORD thy God, which have brought thee out of the land of Egypt, out of the house of bondage.'],
+    [3, 'Thou shalt have no other gods before me.'],
+    [4, 'Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth:'],
+    [5, 'Thou shalt not bow down thyself to them, nor serve them: for I the LORD thy God am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me;'],
+    [6, 'And shewing mercy unto thousands of them that love me, and keep my commandments.'],
+    [7, 'Thou shalt not take the name of the LORD thy God in vain; for the LORD will not hold him guiltless that taketh his name in vain.'],
+    [8, 'Remember the sabbath day, to keep it holy.'],
+    [9, 'Six days shalt thou labour, and do all thy work:'],
+    [10, 'But the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates:'],
+    [11, 'For in six days the LORD made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore the LORD blessed the sabbath day, and hallowed it.'],
+    [12, 'Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.'],
+    [13, 'Thou shalt not kill.'],
+    [14, 'Thou shalt not commit adultery.'],
+    [15, 'Thou shalt not steal.'],
+    [16, 'Thou shalt not bear false witness against thy neighbour.'],
+    [17, 'Thou shalt not covet thy neighbour’s house, thou shalt not covet thy neighbour’s wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbour’s.']] }
+];
+PASSAGES.forEach(p => {
+  p.vids = p.v.map(([n, t]) => { const id = `${p.book}.${p.ch}.${n}`; if (!LIB[id]) LIB[id] = { id, ref: `${p.bookName} ${p.ch}:${n}`, text: t }; return id; });
+  p.ref = `${p.bookName} ${p.ch}:${p.v[0][0]}–${p.v[p.v.length - 1][0]}`;
+  p.text = p.v.map(x => x[1]).join(' ');
+});
+const PASS = {}; PASSAGES.forEach(p => { PASS[p.id] = p; });
 
 const ICONS = {
   leaf: 'M5 19c0-8 6-14 14-14 0 8-6 14-14 14zM5 19l7-7',
@@ -177,7 +283,8 @@ const UI = {
   share: 'M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6', search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4',
   review: 'M4 12a8 8 0 1 1 2.3 5.7M4 18v-4h4', sprout: 'M12 21v-8M12 13c0-4 3-7 7-7 0 4-3 7-7 7zM12 15c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5zM8 21h8',
   link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
-  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
+  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  target: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12h.01'
 };
 const COLORS = {
   olive: { tint: '#E4E8D9', ink: '#4F5D3A', label: 'Olive' },
@@ -200,7 +307,7 @@ const KJV = { id: 'KJV', abbr: 'KJV', name: 'King James Version' };
 
 /* ---------- Saved data (stays on this device) ---------- */
 const KEY = 'hiddenword.v1';
-function fresh() { return { progress: {}, collections: [], mine: [], custom: {}, notes: {}, cache: {}, days: [], version: KJV, bibles: [] }; }
+function fresh() { return { onboarded: false, speech: { rate: 'normal', voice: '' }, pchain: {}, homeTab: 'subjects', progress: {}, collections: [], mine: [], custom: {}, notes: {}, cache: {}, days: [], version: KJV, bibles: [] }; }
 let S = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -214,7 +321,10 @@ const now = () => Date.now();
 const DAY = 864e5;
 function startOfToday() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
 function dueAfter(days) { return startOfToday() + days * DAY + 4 * 3600e3; }
-function verse(id) { return LIB[id] || S.custom[id] || null; }
+function verse(id) {
+  if (typeof id === 'string' && id.startsWith('P:')) { const p = PASS[id.slice(2)]; return p ? { id, ref: p.ref, text: p.text, passage: p } : null; }
+  return LIB[id] || S.custom[id] || null;
+}
 function refOf(id) { const v = verse(id); return v ? v.ref : id; }
 function rec(id) { return S.progress[id]; }
 function status(id) {
@@ -233,7 +343,14 @@ const isMemorized = id => { const r = rec(id); return !!r && r.step >= MEMORIZED
 const dueList = () => Object.keys(S.progress).filter(id => S.progress[id].due <= now()).sort((a, b) => S.progress[a].due - S.progress[b].due);
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
 function markDay() { const d = today(); if (!S.days.includes(d)) { S.days.push(d); if (S.days.length > 400) S.days = S.days.slice(-400); } }
-function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
+let ROUTE = location.hash || '#home', PREV = '#home';
+function resetFor(h) { if (!h.startsWith('#mine')) MM = null; if (!h.startsWith('#welcome') && !h.startsWith('#firstcoll') && !h.startsWith('#add')) { if (typeof WEL !== 'undefined') WEL = null; } if (typeof SPEAKING !== 'undefined' && SPEAKING) stopSpeaking(); if (!h.startsWith('#review')) R = null; if (!h.startsWith('#practice')) P = null; if (!h.startsWith('#add') && !h.startsWith('#newcollection')) ADD = null; if (!h.startsWith('#newcollection')) NC = null; if (!h.startsWith('#share')) SH = null; if (!h.startsWith('#chain')) C = null; }
+function nav(hash, replace) {
+  if (hash === ROUTE) { render(); return; }
+  PREV = ROUTE; ROUTE = hash; resetFor(hash); render();
+  try { history[replace ? 'replaceState' : 'pushState'](null, '', hash); } catch (e) {}
+}
+function go(hash) { nav(hash); }
 function cleanText(t) { return String(t || '').replace(/¶/g, '').replace(/\[\d+\]/g, '').replace(/^\s*\d+\s+/, '').replace(/\s+/g, ' ').trim(); }
 
 /* ---------- Bible connection (through the hidden server function) ---------- */
@@ -257,6 +374,7 @@ function versionFor(id) {
 }
 async function textFor(id, ver) {
   ver = ver || versionFor(id);
+  if (id.startsWith('P:')) { const p = PASS[id.slice(2)]; return (await Promise.all(p.vids.map(v => textFor(v, ver)))).join(' '); }
   if (ver.id === 'KJV' && LIB[id]) return LIB[id].text;
   const c = S.custom[id]; if (c && c.ver && c.ver.id === ver.id) return c.text;
   const key = ver.id + '|' + id;
@@ -276,44 +394,169 @@ let ADD = null; // add-verse state
 let NC = null; // new collection state
 let SH = null; // share state
 function render() {
-  const h = decodeURIComponent(location.hash.replace(/^#/, '')) || 'home';
+  const h = decodeURIComponent(ROUTE.replace(/^#/, '')) || 'home';
   const [name, arg] = [h.split('/')[0], h.split('/').slice(1).join('/')];
-  const tabsFor = { home: 'home', subject: 'home', verses: 'verses', collection: 'verses', progress: 'progress', versions: 'versions' };
+  const tabsFor = { home: 'home', subject: 'home', focus: 'home', passage: 'home', mine: 'home', verses: 'verses', collection: 'verses', progress: 'progress', versions: 'versions' };
   const tabs = document.getElementById('tabs');
   const tab = tabsFor[name];
   tabs.classList.toggle('hide', !tab);
   $app.classList.toggle('full', !tab);
   tabs.querySelectorAll('a').forEach(a => { const on = a.dataset.tab === tab; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  const screens = { home, subject, practice, review, progress, verses, collection, add, newcollection, versions: settings, share };
+  const screens = { home, welcome, firstcoll, mine, focus, subject, passage, chain, practice, review, progress, verses, collection, add, newcollection, versions: settings, share };
   (screens[name] || home)(arg);
   window.scrollTo(0, 0);
 }
-window.addEventListener('hashchange', render);
+function fromAddress() { const h = location.hash || '#home'; if (h !== ROUTE) { PREV = ROUTE; ROUTE = h; resetFor(h); render(); } }
+window.addEventListener('hashchange', fromAddress);
+window.addEventListener('popstate', fromAddress);
+document.addEventListener('click', e => {
+  if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest('a[href^="#"]'); if (!a || a.closest('[data-act]') && a.dataset.act) return;
+  e.preventDefault(); nav(a.getAttribute('href'));
+});
 
 /* ---------- Screens ---------- */
 function backBtn(label, hash) { return `<a class="back" href="${hash}">${svg(UI.back, 18, null, 2)}${esc(label)}</a>`; }
 function subjectCount(s) { return s.ids.filter(id => rec(id)).length; }
 function nextIn(ids) { return ids.find(id => !rec(id)) || ids[0]; }
 
+/* Welcome ideas: "What's on your heart?" */
+const IDEAS = [
+  { label: 'When I’m anxious', icon: 'leaf', color: 'olive', ids: ['PHP.4.6', 'ISA.26.3', 'PSA.56.3', 'MAT.11.28', 'PHP.4.7'] },
+  { label: 'My kids', icon: 'heart', color: 'gold', ids: ['PRO.22.6', '3JN.1.4', 'PSA.127.3', 'ISA.54.13'] },
+  { label: 'My marriage', icon: 'heart', color: 'rose', ids: ['ECC.4.12', 'EPH.4.32', 'COL.3.14', '1PE.4.8'] },
+  { label: 'A hard season', icon: 'sunrise', color: 'sky', ids: ['PSA.34.18', '2CO.12.9', 'ISA.41.10', 'ROM.8.28'] },
+  { label: 'Growing in prayer', icon: 'flame', color: 'lavender', ids: ['1TH.5.17', 'MAT.7.7', 'PSA.145.18', 'JER.33.3'] },
+  { label: 'Fear and courage', icon: 'shield', color: 'sky', ids: ['PSA.56.3', 'JOS.1.9', '2TI.1.7', 'ISA.41.10'] },
+  { label: 'Forgiveness', icon: 'sunrise', color: 'gold', ids: ['1JN.1.9', 'PSA.103.12', 'EPH.4.32', 'COL.3.13'] },
+  { label: 'A passage I’ve always wanted to know', passages: true }
+];
+let WEL = null; // welcome state
+function makeCollection(name, icon, color, ids) {
+  const c = { id: 'c' + Date.now().toString(36) + Math.floor(Math.random() * 1e3), name, icon: icon || 'leaf', color: color || 'olive', ids: [] };
+  ids.forEach(id => { if (!c.ids.includes(id)) c.ids.push(id); if (!id.startsWith('P:') && !S.mine.includes(id)) S.mine.push(id); });
+  S.collections.push(c); return c;
+}
+function welcome() {
+  if (!WEL) WEL = { pick: 0, custom: '' };
+  $app.innerHTML = `
+    <div class="stack" style="gap:10px;margin-top:20px"><p class="eyebrow">Welcome to Hidden Word</p>
+      <h1 style="font-size:40px;line-height:1.08">What’s on your heart right now?</h1>
+      <p class="muted" style="font-size:16px">We’ll start your first collection around it. You can change everything later.</p></div>
+    <div class="chips" role="group" aria-label="Ideas">${IDEAS.map((d, i) => `<button class="chip ${WEL.pick === i && !WEL.custom ? 'on' : ''}" data-act="welpick" data-i="${i}" aria-pressed="${WEL.pick === i && !WEL.custom}" style="min-height:46px;font-size:15px">${esc(d.label)}</button>`).join('')}</div>
+    <label class="f">Or name it yourself<input id="welname" type="text" maxlength="40" value="${esc(WEL.custom)}" placeholder="e.g. Trusting God with my job"></label>
+    <div class="stack" style="margin-top:auto;gap:6px"><button class="btn" data-act="welnext">Continue</button><button class="btn text" data-act="welskip">Skip for now</button></div>`;
+  const inp = document.getElementById('welname');
+  inp.addEventListener('input', () => { const had = !!WEL.custom; WEL.custom = inp.value; if (had !== !!WEL.custom) { document.querySelectorAll('[data-act=welpick]').forEach((b, i) => { const on = !WEL.custom && WEL.pick === i; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); } });
+}
+function firstcoll() {
+  if (!WEL) return go('#welcome');
+  const idea = WEL.custom ? null : IDEAS[WEL.pick];
+  const name = WEL.custom || idea.label;
+  if (!WEL.keep) WEL.keep = {};
+  const ids = idea ? idea.ids : [];
+  const col = COLORS[idea ? idea.color : 'olive'];
+  const n = ids.filter(id => WEL.keep[id] !== false).length;
+  $app.innerHTML = `
+    ${backBtn('Back', '#welcome')}
+    <div class="row"><span class="ibox" style="background:${col.tint};width:56px;height:56px;border-radius:16px">${svg(ICONS[idea ? idea.icon : 'leaf'], 28, col.ink, 1.6)}</span>
+      <div class="stack4"><span class="eyebrow">Your first collection</span><h1 style="font-size:32px">${esc(name)}</h1></div></div>
+    <p class="muted">${ids.length ? 'Here are a few verses to begin with. Keep the ones that speak to you.' : 'Add the verses that speak to you. You can find any verse in the Bible.'}</p>
+    <div class="stack">${ids.map(id => { const v = verse(id), on = WEL.keep[id] !== false; return `<button class="result row ${on ? 'on' : ''}" data-act="welkeep" data-id="${id}" aria-pressed="${on}" style="gap:14px;align-items:flex-start"><span class="radio" style="border-radius:7px;margin-top:2px;${on ? 'background:var(--olive);border-color:var(--olive)' : ''}">${on ? svg(UI.check, 13, '#FBF8F1', 3) : ''}</span><span class="grow stack4"><span class="vname">${esc(v.ref)}</span><span class="serif" style="font-size:17px;line-height:1.3;color:var(--ink2)">${esc(v.text)}</span></span></button>`; }).join('')}</div>
+    <button class="btn" data-act="welstart" style="margin-top:auto">${n ? `Start with ${n} verse${n > 1 ? 's' : ''}` : 'Start my collection'}</button>
+    ${ids.length ? '' : '<p class="muted small" style="text-align:center">Next you’ll add your first verse.</p>'}`;
+}
+/* Make a starter pack or passage your own */
+let MM = null;
+function mine(arg) {
+  const [kind, key] = String(arg || '').split(':');
+  const subj = kind === 's' ? SUBJECTS.find(x => x.id === key) : null, pas = kind === 'p' ? PASS[key] : null;
+  if (!subj && !pas) return go('#home');
+  if (!MM || MM.arg !== arg) MM = { arg, name: subj ? subj.name : pas.name, off: {} };
+  const ids = subj ? subj.ids : ['P:' + pas.id];
+  const n = ids.filter(id => !MM.off[id]).length;
+  $app.innerHTML = `
+    ${backBtn('Today', '#home')}
+    <div class="stack4"><span class="eyebrow">${subj ? 'Starter pack' : 'Passage'} · ${esc(subj ? subj.name : pas.ref)}</span><h1 style="font-size:34px">Make it yours</h1>
+      <p class="muted">${subj ? 'Give it a name that fits your life, and keep only the verses you want.' : 'Add this passage to one of your own collections, named your way. You’ll still learn it verse by verse.'}</p></div>
+    <label class="f">Name it your way<input id="mmname" type="text" maxlength="40" value="${esc(MM.name)}"></label>
+    ${subj ? `<div class="stack" style="gap:8px">${ids.map(id => { const v = verse(id), on = !MM.off[id]; return `<button class="result row ${on ? 'on' : ''}" data-act="mmtoggle" data-id="${id}" aria-pressed="${on}" style="gap:12px;${on ? '' : 'opacity:.6'}"><span class="radio" style="border-radius:7px;${on ? 'background:var(--olive);border-color:var(--olive)' : ''}">${on ? svg(UI.check, 13, '#FBF8F1', 3) : ''}</span><span class="grow stack4"><span class="vname">${esc(v.ref)}</span><span class="vtext ell">${esc(v.text)}</span></span></button>`; }).join('')}</div>` :
+      `<div class="card"><b class="serif" style="font-size:21px">${esc(pas.name)}</b><p class="muted small">${esc(pas.ref)} · ${pas.vids.length} verses</p></div>`}
+    <div class="stack" style="margin-top:auto;gap:6px"><button class="btn" data-act="mmsave" ${n ? '' : 'disabled'}>Add to my collections${subj ? ` (${n} verse${n === 1 ? '' : 's'})` : ''}</button><p class="muted small" style="text-align:center">You can add more verses to it any time.</p></div>`;
+  const inp = document.getElementById('mmname'); inp.addEventListener('input', () => { MM.name = inp.value; });
+}
+
 function home() {
   const hr = new Date().getHours();
   const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
   const due = dueList();
-  const started = SUBJECTS.find(s => subjectCount(s) > 0 && subjectCount(s) < s.ids.length) || SUBJECTS[0];
-  const tid = nextIn(started.ids);
+  const hasFocus = !!(S.focus && verse(S.focus));
+  const firstColl = S.collections.find(c => c.ids.length);
+  const started = SUBJECTS.find(s => subjectCount(s) > 0 && subjectCount(s) < s.ids.length) || SUBJECTS.find(s => subjectCount(s) < s.ids.length) || SUBJECTS[0];
+  const tid = hasFocus ? S.focus : firstColl ? (firstColl.ids.find(id => !rec(id)) || firstColl.ids[0]) : nextIn(started.ids);
   const t = verse(tid);
   const short = t.text.split(' ').slice(0, 11).join(' ') + (t.text.split(' ').length > 11 ? '…' : '');
+  const stLabel = { new: 'Not started', due: 'Ready to review', growing: 'Growing', memorized: 'Memorized' }[status(tid)];
+  const fromColl = S.collections.find(c => c.ids.includes(tid));
+  const label = hasFocus ? `My focus verse · ${stLabel}` : firstColl ? `Next up · ${esc(firstColl.name)}` : `Suggested verse · ${esc(started.name)}`;
+  const collCard = c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card" href="#collection/${c.id}" style="flex:0 0 150px;display:flex;flex-direction:column;gap:10px;padding:14px"><span class="ibox" style="background:${col.tint};width:42px;height:42px;border-radius:12px">${svg(ICONS[c.icon] || ICONS.leaf, 22, col.ink, 1.6)}</span><b class="serif" style="font-size:20px;line-height:1.1">${esc(c.name)}</b><span class="muted small" style="font-size:12px">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></a>`; };
+  const packs = S.homeTab !== 'passages';
   $app.innerHTML = `
-    <div class="stack4"><p class="eyebrow">Hidden Word</p><h1>${greet}</h1><p class="muted">One verse at a time.</p></div>
+    <div class="stack4"><p class="eyebrow">Hidden Word</p><h1>${greet}</h1><p class="muted">Your verses, your way.</p></div>
     ${due.length ? `<a class="card row" href="#review" style="border:2px solid var(--gold)"><span class="ibox" style="background:#F1E4CC;border-radius:999px">${svg(UI.review, 24, '#7A5D1F', 1.8)}</span><span class="grow stack4"><b class="serif" style="font-size:21px">${due.length} verse${due.length > 1 ? 's' : ''} ready to review</b><span class="muted small">Keep them strong</span></span>${svg(UI.chev, 18, '#9A907E', 2)}</a>` : ''}
-    <a class="hero" href="#practice/${encodeURIComponent(tid)}">
-      <span class="eyebrow">${rec(tid) ? 'Practice' : 'Today’s verse'} · ${esc(started.name)}</span>
+    <div class="stack" style="gap:8px">
+    <a class="hero" href="${tid.startsWith('P:') ? '#passage/' + tid.slice(2) : '#practice/' + encodeURIComponent(tid)}">
+      <span class="eyebrow">${label}</span>
       <span class="serif" style="font-size:22px;line-height:1.3;font-style:italic">“${esc(short)}”</span>
-      <span class="top" style="font-size:14px;font-weight:600"><span>${esc(t.ref)}</span><span class="lift">${rec(tid) ? 'Practice' : 'Begin'}</span></span>
+      <span class="top" style="font-size:14px;font-weight:600"><span>${esc(t.ref)}${hasFocus && fromColl ? ` · from ${esc(fromColl.name)}` : ''}</span><span class="lift">${rec(tid) ? 'Practice' : 'Begin'}</span></span>
     </a>
-    <div class="stack"><h2>Subjects</h2>
-      <div class="grid2">${SUBJECTS.map(s => { const n = subjectCount(s); return `<a class="card subj" href="#subject/${s.id}">${svg(ICONS[s.icon], 26, '#B08A3E', 1.6)}<b>${esc(s.name)}</b><span>${n ? `${n} of ${s.ids.length} planted` : `${s.ids.length} verses`}</span></a>`; }).join('')}</div>
+    <a href="#focus" class="row" style="justify-content:center;gap:6px;min-height:44px;font-size:15px;font-weight:700">${svg(UI.target, 18, null, 1.8)}${hasFocus ? 'Change my focus verse' : 'Choose a verse to focus on'}</a>
+    </div>
+    <div class="stack">
+      <div class="top" style="align-items:baseline"><h2 style="font-size:26px">My collections</h2>${S.collections.length ? '<a href="#verses" style="font-size:14px;font-weight:700;min-height:44px;display:flex;align-items:center">See all</a>' : ''}</div>
+      <div class="hscroll" style="display:flex;gap:12px;overflow-x:auto;margin:0 -22px;padding:2px 22px 6px;scroll-snap-type:x proximity">
+        ${S.collections.map(collCard).join('')}
+        ${S.collections.length ? `<a href="#newcollection" class="card" style="flex:0 0 150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1.5px dashed var(--line2);background:transparent;color:var(--olive);font-weight:700;font-size:14px;text-align:center">${svg(UI.plus, 22, null, 2.2)}New collection</a>` :
+          `<a href="#welcome" class="card" style="flex:1;display:flex;align-items:center;gap:14px;border:1.5px dashed var(--line2);background:transparent;color:var(--ink)"><span class="ibox" style="background:var(--sand);border-radius:999px">${svg(UI.plus, 22, '#4F5D3A', 2.2)}</span><span class="stack4"><b class="serif" style="font-size:21px">Start your first collection</b><span class="muted small">Gather verses for what’s on your heart</span></span></a>`}
+      </div>
+    </div>
+    <a href="#add" class="card row" style="border:2px solid var(--olive)"><span class="ibox" style="background:var(--olive);border-radius:999px;width:44px;height:44px;color:#FBF8F1">${svg(UI.plus, 20, null, 2.4)}</span><span class="stack4"><b class="serif" style="font-size:21px">Add a verse</b><span class="muted small">Any verse in the Bible that means something to you</span></span></a>
+    <div class="stack">
+      <div class="stack4"><h2 style="font-size:26px">Ideas to get you started</h2><p class="muted small">Starter packs you can make your own: rename them, remove verses or add your own.</p></div>
+      <div class="seg" role="group" aria-label="Ideas"><button class="${packs ? 'on' : ''}" data-act="hometab" data-k="subjects" aria-pressed="${packs}">Starter packs</button><button class="${!packs ? 'on' : ''}" data-act="hometab" data-k="passages" aria-pressed="${!packs}">Passages</button></div>
+      ${packs ? SUBJECTS.map(s => { const n = subjectCount(s); return `<div class="card row" style="gap:12px;padding:12px 14px"><a href="#subject/${s.id}" class="grow row" style="gap:12px;color:var(--ink)">${svg(ICONS[s.icon], 24, '#B08A3E', 1.6)}<span class="stack4"><b class="serif" style="font-size:20px;line-height:1.1">${esc(s.name)}</b><span class="muted small" style="font-size:12px">${n ? `${n} of ${s.ids.length} planted` : `${s.ids.length} verses · ${esc(s.desc)}`}</span></span></a><a href="#mine/s:${s.id}" class="pill" style="min-height:40px;font-size:13px;white-space:nowrap">Make it mine</a></div>`; }).join('')
+        : `<p class="muted small">Longer passages, learned one verse at a time and linked together.</p>${PASSAGES.map(p => { const st = passageState(p); return `<div class="card row" style="gap:12px;padding:12px 14px"><a href="#passage/${p.id}" class="grow stack4" style="color:var(--ink)"><b class="serif" style="font-size:20px;line-height:1.1">${esc(p.name)}</b><span class="muted small" style="font-size:12px">${esc(p.ref)} · ${st.done ? 'Learned' : st.planted ? `${st.planted} of ${p.vids.length} planted` : `${p.vids.length} verses`}${p.kids ? ' · Kids' : ''}</span></a><a href="#mine/p:${p.id}" class="pill" style="min-height:40px;font-size:13px;white-space:nowrap">Make it mine</a></div>`; }).join('')}`}
     </div>`;
+}
+
+/* Choose a focus verse */
+let FQ = '';
+function focus() {
+  const q = FQ.toLowerCase().trim();
+  const match = id => { if (!q) return true; const v = verse(id); return !!v && (v.ref.toLowerCase().includes(q) || v.text.toLowerCase().includes(q)); };
+  const row = id => {
+    const v = verse(id); if (!v) return '';
+    const on = S.focus === id;
+    const label = v.passage ? v.passage.name + ' \u00b7 ' + v.ref : v.ref;
+    return `<button class="result row ${on ? 'on' : ''}" data-act="setfocus" data-id="${esc(id)}" aria-pressed="${on}" style="gap:12px"><span class="radio" style="${on ? 'background:var(--olive);border-color:var(--olive)' : ''}">${on ? svg(UI.check, 13, '#FBF8F1', 3) : ''}</span><span class="grow stack4"><span class="vname">${esc(label)}</span><span class="vtext ell">${esc(v.text)}</span></span></button>`;
+  };
+  const mine = S.mine.filter(match);
+  const groups = SUBJECTS.map(s => ({ s, ids: s.ids.filter(match) })).filter(g => g.ids.length);
+  const pass = PASSAGES.map(p => 'P:' + p.id).filter(id => match(id) || (q && PASS[id.slice(2)].name.toLowerCase().includes(q)));
+  $app.innerHTML = `
+    ${backBtn('Learn', '#home')}
+    <div class="stack4"><h1>Your focus verse</h1><p class="muted">Pick the verse you want to carry with you. It stays on your home screen until you change it.</p></div>
+    <label class="f" for="fq">Find a verse<input id="fq" type="search" value="${esc(FQ)}" placeholder="Reference or a few words" autocomplete="off"></label>
+    <div id="flist" class="stack" style="gap:20px">
+      ${mine.length ? `<div class="stack"><h2>My verses</h2>${mine.map(row).join('')}</div>` : ''}
+      ${groups.map(g => `<div class="stack"><h2>${esc(g.s.name)}</h2>${g.ids.map(row).join('')}</div>`).join('')}
+      ${pass.length ? `<div class="stack"><h2>Passages</h2>${pass.map(row).join('')}</div>` : ''}
+      ${!mine.length && !groups.length && !pass.length ? '<p class="empty">No match here. Try “Add a verse” to find it anywhere in the Bible.</p>' : ''}
+    </div>
+    <a class="btn ghost" href="#add">${svg(UI.search, 18, null, 2)} Find any verse in the Bible</a>
+    ${S.focus ? '<button class="btn text" data-act="clearfocus">Let the app suggest verses instead</button>' : ''}`;
+  const inp = document.getElementById('fq');
+  inp.addEventListener('input', () => { FQ = inp.value; const pos = inp.selectionStart; render(); const n = document.getElementById('fq'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} });
 }
 
 function verseRow(id, hash) {
@@ -336,8 +579,23 @@ function subject(sid) {
 }
 
 /* Practice: four fading steps, then plant */
-const HINTS = ['Read it aloud, slowly.', 'Say it again. Fill in the blanks.', 'Just the first letters now.', 'Say it from your heart.'];
-function practice(id) {
+const HINTS = ['Read it aloud, slowly.', 'Say it again. Fill in the blanks.', 'Now most of the words are hidden.', 'Just the first letters now.', 'Say it from your heart.'];
+const STEPS = HINTS.length, LAST = STEPS - 1, DONE = STEPS;
+function wordsHTML(text, level) {
+  return (text || '').split(' ').filter(Boolean).map((raw, i) => {
+    const m = raw.match(/^([“‘"'(]*)(.*?)([.,:;!?”’"')]*)$/);
+    const pre = m[1], core = m[2], post = m[3];
+    let shown = core, hidden = '';
+    if (level === 1 && i % 3 === 1) { shown = ''; hidden = core; }
+    if (level === 2 && i % 3 !== 0) { shown = ''; hidden = core; }
+    if (level === 3) { shown = core.charAt(0); hidden = core.slice(1); }
+    if (level >= 4) { shown = ''; hidden = core; }
+    return `<span class="w">${esc(pre + shown)}${hidden ? `<span class="h" data-act="peek" role="button" tabindex="0" aria-label="Hidden word, tap to peek">${esc(hidden)}</span>` : ''}${esc(post)}</span>`;
+  }).join(' ');
+}
+function practice(arg) {
+  const parts = String(arg || '').split('/'), id = parts[0], pid = PASS[parts[1]] ? parts[1] : null;
+  if (id.startsWith('P:')) return go('#passage/' + id.slice(2));
   if (!verse(id)) return go('#home');
   if (!P || P.id !== id) P = { id, level: 0, text: null, ver: versionFor(id), err: null };
   const v = verse(id);
@@ -346,21 +604,13 @@ function practice(id) {
       .catch(() => { if (P && P.id === id) { P.err = true; P.ver = LIB[id] ? KJV : (S.custom[id] && S.custom[id].ver) || KJV; P.text = LIB[id] ? LIB[id].text : v.text; render(); } });
   }
   const from = SUBJECTS.find(s => s.ids.includes(id));
-  const backTo = from ? ['#subject/' + from.id, from.name] : ['#verses', 'My Verses'];
-  if (P.level >= 4) return planted(id, backTo);
-  const words = (P.text || '').split(' ').filter(Boolean).map((raw, i) => {
-    const m = raw.match(/^([“‘"'(]*)(.*?)([.,:;!?”’"')]*)$/);
-    const pre = m[1], core = m[2], post = m[3];
-    let shown = core, hidden = '';
-    if (P.level === 1 && i % 3 === 1) { shown = ''; hidden = core; }
-    if (P.level === 2) { shown = core.charAt(0); hidden = core.slice(1); }
-    if (P.level === 3) { shown = ''; hidden = core; }
-    return `<span class="w">${esc(pre + shown)}${hidden ? `<span class="h" data-act="peek" role="button" tabindex="0" aria-label="Hidden word, tap to peek">${esc(hidden)}</span>` : ''}${esc(post)}</span>`;
-  }).join(' ');
+  const backTo = pid ? ['#passage/' + pid, PASS[pid].name] : from ? ['#subject/' + from.id, from.name] : ['#verses', 'Collections'];
+  if (P.level >= DONE) return planted(id, backTo, pid);
+  const words = wordsHTML(P.text, P.level);
   const r = rec(id);
   $app.innerHTML = `
-    <div class="top">${backBtn(backTo[1], backTo[0])}<a class="pill" href="#versions" aria-label="Bible version ${esc(P.ver.abbr)}. Change version">${esc(P.ver.abbr)} ${svg(UI.down, 14, null, 2.2)}</a></div>
-    <div class="dots" role="img" aria-label="Step ${P.level + 1} of 4">${[0, 1, 2, 3].map(n => `<i class="${n <= P.level ? 'on' : ''}"></i>`).join('')}</div>
+    <div class="top">${backBtn(backTo[1], backTo[0])}<span class="row" style="gap:8px"><button class="pill" data-act="togglefocus" data-id="${esc(id)}" aria-pressed="${S.focus === id}" style="${S.focus === id ? 'background:var(--olive);color:#FBF8F1;border-color:var(--olive)' : ''}">${svg(UI.target, 16, null, 1.9)}${S.focus === id ? 'My focus' : 'Focus'}</button><a class="pill" href="#versions" aria-label="Bible version ${esc(P.ver.abbr)}. Change version">${esc(P.ver.abbr)} ${svg(UI.down, 14, null, 2.2)}</a></span></div>
+    <div class="dots" role="img" aria-label="Step ${P.level + 1} of ${STEPS}">${HINTS.map((_, n) => n).map(n => `<i class="${n <= P.level ? 'on' : ''}"></i>`).join('')}</div>
     <div class="practice">
       <p class="eyebrow" style="text-align:center">${esc(v.ref)}</p>
       ${P.text == null ? '<p class="empty">Opening the verse…</p>' : `<p class="words">${words}</p>`}
@@ -369,13 +619,28 @@ function practice(id) {
     <p style="text-align:center;font-size:16px;font-weight:600;color:var(--ink2)">${HINTS[P.level]}${P.level ? ' Tap a blank to peek.' : ''}</p>
     ${r && r.ver && S.version && r.ver.id !== S.version.id ? `<p class="muted small" style="text-align:center">You planted this verse in ${esc(r.ver.abbr)}, so it stays in ${esc(r.ver.abbr)}.</p>` : ''}
     <div class="row" style="gap:12px">
-      <button class="round" data-act="listen" aria-label="Listen to the verse">${svg(UI.speaker, 22, null, 1.8)}</button>
+      <button class="round" data-act="listen" data-say="practice" aria-label="Listen">${svg(UI.speaker, 22, null, 1.8)}</button>
       ${P.level > 0 ? '<button class="btn ghost" style="width:auto;flex:0 0 auto" data-act="less">Show more</button>' : ''}
-      <button class="btn" data-act="more" ${P.text == null ? 'disabled' : ''}>${P.level >= 3 ? 'I said it!' : 'Fade more'}</button>
+      <button class="btn" data-act="more" ${P.text == null ? 'disabled' : ''}>${P.level >= LAST ? 'I said it!' : 'Fade more'}</button>
     </div>`;
 }
-function planted(id, backTo) {
+function planted(id, backTo, pid) {
   const v = verse(id);
+  if (pid) {
+    const p = PASS[pid], ns = nextStep(p);
+    $app.innerHTML = `
+      <div class="center" style="flex:1;justify-content:center">
+        <div class="bigicon">${svg(UI.sprout, 58, '#4F5D3A', 1.3)}</div>
+        <h1>Verse planted</h1>
+        <p class="muted" style="max-width:300px">${esc(v.ref)} is planted. ${esc(p.name)}: ${p.vids.filter(x => rec(x)).length} of ${p.vids.length} verses.</p>
+        <div class="stack" style="width:100%;margin-top:8px">
+          <a class="btn" href="${ns.href}">${esc(ns.label)}</a>
+          <a class="btn ghost" href="#passage/${pid}">Back to ${esc(p.name)}</a>
+          <button class="btn text" data-act="again">Practice this verse again</button>
+        </div>
+      </div>`;
+    return;
+  }
   const next = (() => { const s = SUBJECTS.find(x => x.ids.includes(id)); return s ? s.ids.find(x => !rec(x)) : null; })();
   $app.innerHTML = `
     <div class="center" style="flex:1;justify-content:center">
@@ -394,6 +659,85 @@ function plant(id) {
   const r = rec(id);
   if (!r) S.progress[id] = { ver: P.ver, step: 0, due: dueAfter(1), planted: today() };
   markDay(); save();
+}
+
+/* Passages: learn verse by verse, then link them together */
+function vnum(p, i) { return p.v[i][0]; }
+function rangeRef(p, k) { return k === 1 ? `${p.bookName} ${p.ch}:${vnum(p, 0)}` : `${p.bookName} ${p.ch}:${vnum(p, 0)}–${vnum(p, k - 1)}`; }
+function passageState(p) {
+  const u = p.vids.findIndex(x => !rec(x));
+  const run = u === -1 ? p.vids.length : u; // verses planted in order from the start
+  const chained = Math.min(S.pchain[p.id] || 0, run);
+  return { planted: p.vids.filter(x => rec(x)).length, run, chained, u, done: (S.pchain[p.id] || 0) >= p.vids.length && u === -1 };
+}
+function nextStep(p) {
+  const s = passageState(p);
+  if (s.run >= 2 && s.chained < s.run) return { href: `#chain/${p.id}/${s.run}`, label: `Say verses ${vnum(p, 0)}–${vnum(p, s.run - 1)} together` };
+  if (s.u !== -1) return { href: `#practice/${encodeURIComponent(p.vids[s.u])}/${p.id}`, label: s.planted ? `Learn verse ${vnum(p, s.u)}` : `Start with verse ${vnum(p, 0)}` };
+  return { href: `#chain/${p.id}/${p.vids.length}`, label: 'Practice the whole passage' };
+}
+function passageCard(p) {
+  const s = passageState(p);
+  const sub = s.done ? 'Whole passage learned' : s.planted ? `${s.planted} of ${p.vids.length} verses planted` : `${p.vids.length} verses`;
+  return `<a class="card row" href="#passage/${p.id}"><span class="ibox" style="background:var(--sand);border-radius:14px">${svg(ICONS[p.icon], 24, '#B08A3E', 1.6)}</span><span class="grow stack4"><b class="serif" style="font-size:21px;line-height:1.1">${esc(p.name)}</b><span class="muted small">${esc(p.ref)} · ${sub}</span></span>${s.done ? '<span class="tag">Learned</span>' : p.kids ? '<span class="tag new">Kids</span>' : svg(UI.chev, 18, '#9A907E', 2)}</a>`;
+}
+function passage(pid) {
+  const p = PASS[pid]; if (!p) return go('#home');
+  const s = passageState(p), ns = nextStep(p);
+  $app.innerHTML = `
+    ${backBtn('Passages', '#home')}
+    <div class="center" style="gap:10px">
+      <div class="ibox" style="width:72px;height:72px;border-radius:999px;background:var(--sand)">${svg(ICONS[p.icon], 36, '#B08A3E', 1.5)}</div>
+      <h1 style="font-size:40px">${esc(p.name)}</h1>
+      <p class="eyebrow">${esc(p.ref)}${p.kids ? ' · Great for kids' : ''}</p>
+      <p class="muted">${esc(p.desc)}</p>
+      <div class="stack4" style="width:100%"><div class="bar"><i style="width:${Math.round(s.planted / p.vids.length * 100)}%"></i></div>
+        <span class="muted small" style="font-weight:600">${s.planted} of ${p.vids.length} verses planted${s.chained >= 2 ? ` · verses ${vnum(p, 0)}–${vnum(p, s.chained - 1)} linked together` : ''}</span></div>
+    </div>
+    ${s.done ? `<div class="card" style="text-align:center;border:2px solid var(--olive)"><b class="serif" style="font-size:22px">You’ve learned the whole passage.</b><p class="muted small">It will come back in your reviews to keep it strong.</p></div>` : ''}
+    <a class="btn" href="${ns.href}">${esc(ns.label)}</a>
+    <p class="muted small" style="text-align:center">Learn one verse at a time. After each new verse, you’ll say it together with the ones before it.</p>
+    <div class="stack">${p.vids.map((vid, i) => { const v = verse(vid); return `<a class="card row" href="#practice/${encodeURIComponent(vid)}/${p.id}"><span class="serif" style="font-size:24px;font-weight:600;color:var(--goldtext);width:28px;text-align:center">${vnum(p, i)}</span><span class="grow vtext" style="font-style:normal;font-size:18px;line-height:1.3">${esc(v.text)}</span>${statusTag(vid)}</a>`; }).join('')}</div>
+    <div class="stack"><a class="btn ghost" href="#share/${encodeURIComponent('P:' + p.id)}">${svg(UI.share, 20, null, 1.8)} Share this passage</a>
+      <button class="btn text" data-act="togglefocus" data-id="P:${p.id}">${S.focus === 'P:' + p.id ? 'This is your focus' : 'Make this my focus'}</button></div>`;
+}
+let C = null; // chain session
+function chain(arg) {
+  const [pid, ks] = String(arg || '').split('/'); const p = PASS[pid]; if (!p) return go('#home');
+  const k = Math.max(1, Math.min(p.vids.length, parseInt(ks, 10) || p.vids.length));
+  const key = pid + '/' + k;
+  if (!C || C.key !== key) C = { key, p, k, level: 0, text: null, ver: versionFor(p.vids[0]) };
+  if (C.text == null) Promise.all(p.vids.slice(0, k).map(v => textFor(v, C.ver).catch(() => LIB[v].text))).then(ts => { if (C && C.key === key) { C.text = ts.join(' '); render(); } });
+  if (C.level >= DONE) return chainDone(p, k);
+  const whole = k === p.vids.length;
+  $app.innerHTML = `
+    <div class="top">${backBtn(p.name, '#passage/' + pid)}<span class="pill" aria-label="Bible version">${esc(C.ver.abbr)}</span></div>
+    <div class="stack4" style="text-align:center"><p class="eyebrow">${whole && passageState(p).done ? 'The whole passage' : 'Put it together'}</p><h2>${esc(rangeRef(p, k))}</h2></div>
+    <div class="dots" role="img" aria-label="Step ${C.level + 1} of ${STEPS}">${HINTS.map((_, n) => n).map(n => `<i class="${n <= C.level ? 'on' : ''}"></i>`).join('')}</div>
+    <div class="practice" style="padding:26px 20px">${C.text == null ? '<p class="empty">Opening the passage…</p>' : `<p class="words" style="font-size:${k > 4 ? 22 : 26}px">${wordsHTML(C.text, C.level)}</p>`}</div>
+    <p style="text-align:center;font-size:16px;font-weight:600;color:var(--ink2)">${HINTS[C.level]}${C.level ? ' Tap a blank to peek.' : ''}</p>
+    <div class="row" style="gap:12px">
+      <button class="round" data-act="listen" data-say="chain" aria-label="Listen">${svg(UI.speaker, 22, null, 1.8)}</button>
+      ${C.level > 0 ? '<button class="btn ghost" style="width:auto;flex:0 0 auto" data-act="cless">Show more</button>' : ''}
+      <button class="btn" data-act="cmore" ${C.text == null ? 'disabled' : ''}>${C.level >= LAST ? 'I said it!' : 'Fade more'}</button>
+    </div>`;
+}
+function chainDone(p, k) {
+  const total = p.vids.length;
+  S.pchain[p.id] = Math.max(S.pchain[p.id] || 0, k); markDay();
+  const finished = k >= total;
+  if (finished && !rec('P:' + p.id)) S.progress['P:' + p.id] = { ver: C.ver, step: 0, due: dueAfter(1), planted: today() };
+  save();
+  const ns = nextStep(p);
+  $app.innerHTML = `
+    <div class="center" style="flex:1;justify-content:center">
+      <div class="bigicon">${svg(UI.sprout, 58, '#4F5D3A', 1.3)}</div>
+      <h1>${finished ? 'The whole passage is in your heart' : 'Linked together'}</h1>
+      <p class="muted" style="max-width:300px">${finished ? `You can say ${esc(p.ref)} from memory. It will come back tomorrow for review.` : `You said ${esc(rangeRef(p, k))} together. ${total - k} verse${total - k === 1 ? '' : 's'} to go.`}</p>
+      <div class="stack" style="width:100%;margin-top:8px">
+        ${finished ? `<a class="btn" href="#share/${encodeURIComponent('P:' + p.id)}">${svg(UI.share, 20, null, 1.8)} Share this passage</a><a class="btn ghost" href="#passage/${p.id}">Done</a>` : `<a class="btn" href="${ns.href}">${esc(ns.label)}</a><a class="btn ghost" href="#passage/${p.id}">Back to ${esc(p.name)}</a>`}
+      </div>
+    </div>`;
 }
 
 /* Review: reference first, then check yourself */
@@ -420,6 +764,7 @@ function review() {
       ${R.stage === 'letters' ? `<p class="serif" style="font-size:26px;letter-spacing:.06em;color:var(--ink2);line-height:1.4">${esc(letters)}</p>` : ''}
       ${R.stage === 'shown' ? `<p class="serif" style="font-size:27px;line-height:1.3">${esc(R.text || v.text)}</p>` : ''}
     </div>
+    ${R.stage === 'shown' ? `<div class="row" style="justify-content:center"><button class="round" data-act="listen" data-say="review" aria-label="Listen">${svg(UI.speaker, 22, null, 1.8)}</button></div>` : ''}
     ${R.stage !== 'shown' ? `<div class="row" style="gap:12px"><button class="btn ghost" data-act="letters" ${R.stage === 'letters' ? 'disabled' : ''}>First letters</button><button class="btn" data-act="reveal">Check my verse</button></div>` :
       `<div class="stack"><p style="text-align:center;font-weight:700;color:var(--ink2);font-size:14px">How did it go?</p><div class="row" style="gap:12px">
         <button class="btn ghost" data-act="missed" style="flex-direction:column;gap:0;border-radius:18px;min-height:62px"><span>Needed help</span><span class="small" style="color:var(--muted);font-weight:600">Back tomorrow</span></button>
@@ -436,7 +781,8 @@ function grade(knew) {
 
 /* Progress dashboard */
 function progress() {
-  const all = Object.keys(S.progress);
+  const all = Object.keys(S.progress).filter(id => !id.startsWith('P:'));
+  const passDone = PASSAGES.filter(p => passageState(p).done).length;
   const mem = all.filter(isMemorized).length, growing = all.length - mem, due = dueList().length;
   const month = today().slice(0, 7), days = S.days.filter(d => d.startsWith(month)).length;
   const leaves = all.map(id => isMemorized(id)).sort((a, b) => b - a);
@@ -448,6 +794,7 @@ function progress() {
     <div class="stack4"><h1>Your progress</h1><p class="muted">What you’ve hidden in your heart.</p></div>
     <div class="hero" style="gap:14px">
       <div class="row" style="align-items:flex-end;gap:12px"><span class="serif" style="font-size:76px;font-weight:600;line-height:.85">${mem}</span><span style="font-size:16px;font-weight:600;padding-bottom:4px">verse${mem === 1 ? '' : 's'} memorized</span></div>
+      ${passDone ? `<span style="font-weight:700">${passDone} whole passage${passDone === 1 ? '' : 's'} learned</span>` : ''}
       ${leaves.length ? `<div class="leafgrid" role="img" aria-label="${mem} memorized, ${growing} growing">${leaves.map(m => `<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z" fill="${m ? '#E3D7B8' : 'none'}" stroke="${m ? '#E3D7B8' : '#B9C2A2'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div>` : ''}
       <span class="small" style="color:#E3D7B8">${all.length ? `Each leaf is a verse you’ve planted. Filled leaves are memorized; a verse is memorized after it passes its 7-day review.` : 'Plant your first verse and your garden begins here.'}</span>
     </div>
@@ -467,7 +814,7 @@ function verses() {
   const unsorted = S.mine.filter(id => !inColl.has(id));
   const sorted = S.mine.filter(id => inColl.has(id));
   $app.innerHTML = `
-    <div class="top" style="align-items:flex-end"><div class="stack4"><h1>My Verses</h1><p class="muted">Your collections, named your way.</p></div>
+    <div class="top" style="align-items:flex-end"><div class="stack4"><h1>My Collections</h1><p class="muted">Your verses, named your way.</p></div>
       <a href="#add" class="round" style="background:var(--olive);color:#FBF8F1;border:none;width:50px;height:50px" aria-label="Add a verse">${svg(UI.plus, 22, null, 2.2)}</a></div>
     <div class="stack">
       ${S.collections.map(c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card row" href="#collection/${c.id}" data-drop="${c.id}"><span class="ibox" style="background:${col.tint}">${svg(ICONS[c.icon] || ICONS.leaf, 24, col.ink, 1.6)}</span><span class="grow stack4"><b class="serif" style="font-size:22px;line-height:1.1">${esc(c.name)}</b><span class="muted small">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></span>${svg(UI.chev, 18, '#9A907E', 2)}</a>`; }).join('')}
@@ -507,7 +854,7 @@ document.addEventListener('pointermove', e => {
     if (Math.hypot(e.clientX - DRAG.x0, e.clientY - DRAG.y0) < 6) return;
     if (!S.collections.length) { DRAG = null; toast('Make a collection first'); return; }
     DRAG.moved = true; MOVE = null;
-    const g = DRAG.src.cloneNode(true); g.classList.add('ghost'); g.style.width = DRAG.w + 'px';
+    const g = DRAG.src.cloneNode(true); g.classList.add('drag-ghost'); g.style.width = DRAG.w + 'px';
     document.body.appendChild(g); DRAG.ghost = g; DRAG.src.classList.add('dragging'); document.body.classList.add('is-dragging');
   }
   e.preventDefault();
@@ -534,7 +881,7 @@ function collection(cid) {
   const col = COLORS[c.color] || COLORS.olive;
   const next = c.ids.find(id => !rec(id)) || c.ids[0];
   $app.innerHTML = `
-    <div class="top">${backBtn('My Verses', '#verses')}<button class="back" data-act="delcoll" data-id="${c.id}" style="color:var(--muted)" aria-label="Delete collection">${svg(UI.trash, 18, null, 1.8)}</button></div>
+    <div class="top">${backBtn('Collections', '#verses')}<button class="back" data-act="delcoll" data-id="${c.id}" style="color:var(--muted)" aria-label="Delete collection">${svg(UI.trash, 18, null, 1.8)}</button></div>
     <div class="row"><span class="ibox" style="background:${col.tint};width:60px;height:60px;border-radius:18px">${svg(ICONS[c.icon] || ICONS.leaf, 30, col.ink, 1.6)}</span><h1 style="font-size:34px">${esc(c.name)}</h1></div>
     <div class="stack">${c.ids.length ? c.ids.map(id => verseRow(id) + (S.notes[id] ? `<p class="muted small" style="padding:0 6px;margin-top:-4px">“${esc(S.notes[id])}”</p>` : '')).join('') : '<p class="empty">No verses here yet.</p>'}</div>
     <div class="stack">${next ? `<a class="btn" href="#practice/${encodeURIComponent(next)}">Practice this collection</a>` : ''}<a class="btn ghost" href="#add">${svg(UI.plus, 18, null, 2.2)} Add a verse</a></div>`;
@@ -545,7 +892,7 @@ function add() {
   if (!ADD) ADD = { q: '', results: [], picked: null, colls: {}, note: '', busy: false, msg: '' };
   const res = ADD.results;
   $app.innerHTML = `
-    <div class="top">${backBtn('My Verses', '#verses')}</div>
+    <div class="top">${backBtn('Collections', '#verses')}</div>
     <h1 style="font-size:34px">Add a verse</h1>
     <form class="stack" data-form="search">
       <label class="f" for="q">Find by reference or words you remember</label>
@@ -622,12 +969,21 @@ function settings() {
       ${list.map(b => { const on = (S.version || KJV).id === b.id; return `<button class="opt ${on ? 'on' : ''}" data-act="setver" data-id="${esc(b.id)}" aria-pressed="${on}"><span class="radio">${on ? svg(UI.check, 13, '#FBF8F1', 3) : ''}</span><span class="grow stack4"><b>${esc(b.abbr)}</b><span class="muted small ell">${esc(b.name)}${b.id === 'KJV' ? ' · built in, works offline' : ''}</span></span></button>`; }).join('')}
     </div>
     <p class="muted small" style="text-align:center">${apiOK ? 'Verses you’ve already planted stay in the version you learned them in.' : 'More versions appear here once the app is connected to API.Bible.'}</p>
+    <div class="stack"><h2>Read aloud</h2>
+      <span style="font-size:13px;font-weight:700;color:var(--ink2)">Speed</span>
+      <div class="seg" role="group" aria-label="Reading speed" style="grid-template-columns:repeat(4,1fr)">${RATES.map(([k, label]) => { const on = (S.speech.rate || 'normal') === k; return `<button class="${on ? 'on' : ''}" data-act="setrate" data-k="${k}" aria-pressed="${on}">${label}</button>`; }).join('')}</div>
+      ${englishVoices().length > 1 ? `<label class="f" for="voicepick">Voice<select id="voicepick" style="width:100%;min-height:50px;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:0 12px;font:inherit;font-size:16px;color:var(--ink)"><option value="">Automatic (best available)</option>${englishVoices().map(v => `<option value="${esc(v.name)}" ${S.speech.voice === v.name ? 'selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select></label>` : ''}
+      <button class="btn ghost" data-act="listen" data-say="sample" style="gap:8px">${svg(UI.speaker, 20, null, 1.8)} Play a sample</button>
+      <p class="muted small">Voices come from your phone or computer, so they sound different on each device.</p>
+    </div>
     <div class="stack"><h2>Your data</h2>
       <p class="muted">Everything you do in Hidden Word stays on this device. Nothing is sent to us.</p>
       <button class="btn ghost" data-act="export">Save a backup file</button>
       <label class="btn ghost" style="cursor:pointer">Restore from a backup<input type="file" accept="application/json" id="restore" class="sr"></label>
     </div>
     <p class="muted small" style="text-align:center">Scripture quotations marked KJV are from the King James Version (public domain).${S.bibles.length ? ' Other versions are provided through API.Bible and are copyrighted by their publishers.' : ''}</p>`;
+  const vp = document.getElementById('voicepick');
+  if (vp) vp.addEventListener('change', () => { S.speech.voice = vp.value; save(); VOICE = pickVoice(); stopSpeaking(); speakToggle('sample'); });
   const f = document.getElementById('restore');
   f.addEventListener('change', async () => {
     try { const d = JSON.parse(await f.files[0].text()); if (!d.progress) throw 0; S = Object.assign(fresh(), d); save(); toast('Backup restored'); render(); }
@@ -635,63 +991,148 @@ function settings() {
   });
 }
 
-/* Share a verse as an image */
+/* ---------- Verse image designer & sharing ---------- */
+const FORMATS = { story: { w: 1080, h: 1920, label: 'Story', base: 84 }, post: { w: 1080, h: 1350, label: 'Post', base: 72 }, square: { w: 1080, h: 1080, label: 'Square', base: 64 } };
+const BGS = [
+  { id: 'cream', label: 'Cream', a: '#F7F2E8', ink: 'dark' },
+  { id: 'olive', label: 'Olive', a: '#4F5D3A', ink: 'light' },
+  { id: 'navy', label: 'Navy', a: '#1F2E44', ink: 'light' },
+  { id: 'charcoal', label: 'Charcoal', a: '#2B2A26', ink: 'light' },
+  { id: 'sand', label: 'Sand', a: '#E9DCC3', ink: 'dark' },
+  { id: 'clay', label: 'Clay', a: '#9C5A3C', ink: 'light' },
+  { id: 'sunrise', label: 'Sunrise', a: '#F8E1C4', b: '#E59E78', ink: 'dark' },
+  { id: 'dusk', label: 'Dusk', a: '#2E3A59', b: '#7C5C8A', ink: 'light' },
+  { id: 'ocean', label: 'Ocean', a: '#174A5C', b: '#4F8F8E', ink: 'light' },
+  { id: 'meadow', label: 'Meadow', a: '#E4EDCF', b: '#9DB57C', ink: 'dark' },
+  { id: 'lavender', label: 'Lavender', a: '#EEE7F3', b: '#B4A0CE', ink: 'dark' },
+  { id: 'gold', label: 'Gold', a: '#F5E7BF', b: '#C59B4E', ink: 'dark' },
+  { id: 'night', label: 'Night', a: '#0F1626', b: '#2C3E63', ink: 'light' }
+];
+/* Optional nature photos: put image files in public/backgrounds/ and list them here, e.g.
+   { id: 'mountains', label: 'Mountains', src: 'backgrounds/mountains.jpg' }  (use photos you have the right to use) */
+const BG_PHOTOS = [];
+const FONTS = [
+  { id: 'classic', label: 'Classic', css: '500 {s}px "Cormorant Garamond", Georgia, serif', lh: 1.28 },
+  { id: 'elegant', label: 'Elegant', css: 'italic 500 {s}px "Cormorant Garamond", Georgia, serif', lh: 1.28 },
+  { id: 'display', label: 'Display', css: '600 {s}px "Playfair Display", Georgia, serif', lh: 1.3, scale: 0.86 },
+  { id: 'modern', label: 'Modern', css: '700 {s}px Nunito, system-ui, sans-serif', lh: 1.32, scale: 0.84 },
+  { id: 'bold', label: 'Bold', css: '500 {s}px Oswald, Impact, sans-serif', lh: 1.2, upper: true, scale: 0.9 },
+  { id: 'hand', label: 'Handwritten', css: '600 {s}px Caveat, "Segoe Print", cursive', lh: 1.12, scale: 1.12 }
+];
+function designPrefs() { if (!S.design) S.design = { bg: 'cream', font: 'classic', size: 100, align: 'center', ink: 'auto', shade: 35, showRef: true, showVer: true }; return S.design; }
+let PHOTO = null; // { id, img } chosen photo for this session
 function share(id) {
   const v = verse(id); if (!v) return go('#home');
-  if (!SH || SH.id !== id) SH = { id, fmt: 'story', label: !!rec(id), text: null, ver: versionFor(id) };
+  const D = designPrefs();
+  if (!SH || SH.id !== id) { SH = { id, fmt: 'story', label: !!rec(id), text: null, ver: versionFor(id), tab: 'bg' }; }
   if (SH.text == null) textFor(id, SH.ver).then(t => { if (SH && SH.id === id) { SH.text = t; render(); } }).catch(() => { if (SH && SH.id === id) { SH.text = v.text; SH.ver = LIB[id] ? KJV : SH.ver; render(); } });
+  const F = FORMATS[SH.fmt];
+  const bgTile = b => `<button class="bgt ${!PHOTO && D.bg === b.id ? 'on' : ''}" data-act="dbg" data-k="${b.id}" aria-label="${b.label}" aria-pressed="${!PHOTO && D.bg === b.id}" style="background:${b.b ? `linear-gradient(135deg, ${b.a}, ${b.b})` : b.a}"></button>`;
+  const photoTile = p => `<button class="bgt ${PHOTO && PHOTO.id === p.id ? 'on' : ''}" data-act="dphoto" data-k="${p.id}" aria-label="${esc(p.label)}" style="background:#ccc url('${p.src}') center/cover"></button>`;
+  const seg = (act, items, cur) => `<div class="seg" style="grid-template-columns:repeat(${items.length},1fr)">${items.map(([k, l]) => `<button class="${cur === k ? 'on' : ''}" data-act="${act}" data-k="${k}" aria-pressed="${cur === k}">${l}</button>`).join('')}</div>`;
+  const tog = (k, l) => `<label class="row" style="gap:10px;min-height:40px;font-weight:600;cursor:pointer"><input type="checkbox" data-tog="${k}" ${(k === 'label' ? SH.label : D[k]) ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--olive);margin:0"> ${l}</label>`;
   $app.innerHTML = `
-    <div class="top"><h1 style="font-size:30px">Share this verse</h1><button class="round" data-act="closeShare" aria-label="Close" style="width:44px;height:44px">${svg(UI.close, 18, null, 2.2)}</button></div>
-    <canvas class="preview" id="card" width="1080" height="${SH.fmt === 'story' ? 1920 : 1080}" role="img" aria-label="Verse card for ${esc(v.ref)}"></canvas>
-    <div class="seg" role="group" aria-label="Card size"><button class="${SH.fmt === 'story' ? 'on' : ''}" data-act="fmt" data-k="story" aria-pressed="${SH.fmt === 'story'}">Story</button><button class="${SH.fmt === 'square' ? 'on' : ''}" data-act="fmt" data-k="square" aria-pressed="${SH.fmt === 'square'}">Square post</button></div>
-    <label class="row" style="gap:10px;min-height:44px;font-weight:600;cursor:pointer"><input type="checkbox" id="lbl" ${SH.label ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--olive);margin:0"> Add “Planted in my heart”</label>
-    <div class="stack"><button class="btn" data-act="shareimg">${svg(UI.share, 20, null, 1.8)} Share image</button>
-      <button class="btn ghost" data-act="invite">${svg(UI.link, 20, null, 1.8)} Invite a friend to memorize this with you</button></div>`;
-  document.getElementById('lbl').addEventListener('change', e => { SH.label = e.target.checked; drawCard(); });
+    <div class="top"><h1 style="font-size:30px">Share this ${SH.id.startsWith('P:') ? 'passage' : 'verse'}</h1><button class="round" data-act="closeShare" aria-label="Close" style="width:44px;height:44px">${svg(UI.close, 18, null, 2.2)}</button></div>
+    <canvas class="preview" id="card" width="${F.w}" height="${F.h}" style="max-width:${SH.fmt === 'story' ? 210 : SH.fmt === 'post' ? 260 : 290}px" role="img" aria-label="Verse image for ${esc(v.ref)}"></canvas>
+    ${seg('fmt', Object.keys(FORMATS).map(k => [k, FORMATS[k].label + (k === 'story' ? ' 9:16' : k === 'post' ? ' 4:5' : ' 1:1')]), SH.fmt)}
+    ${seg('dtab', [['bg', 'Background'], ['text', 'Text'], ['more', 'Details']], SH.tab)}
+    ${SH.tab === 'bg' ? `
+      <div class="bgrow">${BGS.map(bgTile).join('')}${BG_PHOTOS.map(photoTile).join('')}</div>
+      <label class="btn ghost" style="cursor:pointer">${svg('M4 7h3l2-3h6l2 3h3v12H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', 20, null, 1.8)} Use my own photo<input type="file" accept="image/*" id="ownphoto" class="sr"></label>
+      ${PHOTO ? `<label class="f">Darken the photo so the words stand out<input type="range" min="0" max="80" value="${D.shade}" data-range="shade" style="accent-color:var(--olive)"></label>` : ''}` : ''}
+    ${SH.tab === 'text' ? `
+      <div class="fontrow">${FONTS.map(f => `<button class="fontt ${D.font === f.id ? 'on' : ''}" data-act="dfont" data-k="${f.id}" aria-pressed="${D.font === f.id}"><span style="font:${f.css.replace('{s}', '26')};line-height:1">${f.upper ? 'AA' : 'Aa'}</span><span class="small">${f.label}</span></button>`).join('')}</div>
+      <label class="f">Text size<input type="range" min="70" max="130" value="${D.size}" data-range="size" style="accent-color:var(--olive)"></label>
+      ${seg('dalign', [['left', 'Left'], ['center', 'Center']], D.align)}
+      ${seg('dink', [['auto', 'Auto color'], ['light', 'Light text'], ['dark', 'Dark text']], D.ink)}` : ''}
+    ${SH.tab === 'more' ? `<div class="stack" style="gap:2px">${tog('showRef', 'Show the reference')}${tog('showVer', 'Show the Bible version')}${tog('label', 'Add “Planted in my heart”')}</div>` : ''}
+    <div class="stack" style="gap:10px">
+      <span style="font-size:13px;font-weight:700;color:var(--ink2)">Share it</span>
+      <div class="grid2">
+        <button class="btn" data-act="shareto" data-k="igstory" style="font-size:15px">Instagram Story</button>
+        <button class="btn" data-act="shareto" data-k="igpost" style="font-size:15px">Instagram post</button>
+        <button class="btn" data-act="shareto" data-k="facebook" style="font-size:15px">Facebook</button>
+        <button class="btn ghost" data-act="shareto" data-k="save" style="font-size:15px">Save image</button>
+      </div>
+      <button class="btn ghost" data-act="invite">${svg(UI.link, 20, null, 1.8)} Invite a friend to memorize this</button>
+    </div>`;
+  document.querySelectorAll('[data-tog]').forEach(el => el.addEventListener('change', () => { if (el.dataset.tog === 'label') SH.label = el.checked; else { D[el.dataset.tog] = el.checked; save(); } drawCard(); }));
+  document.querySelectorAll('[data-range]').forEach(el => el.addEventListener('input', () => { D[el.dataset.range] = +el.value; drawCard(); }));
+  document.querySelectorAll('[data-range]').forEach(el => el.addEventListener('change', save));
+  const own = document.getElementById('ownphoto');
+  if (own) own.addEventListener('change', () => { const f = own.files[0]; if (!f) return; const img = new Image(); img.onload = () => { PHOTO = { id: 'own', img }; if (D.ink === 'dark') D.ink = 'auto'; render(); }; img.onerror = () => toast('That photo couldn’t be opened'); img.src = URL.createObjectURL(f); });
   drawCard();
+  if (document.fonts && !SH.fontsReady) { SH.fontsReady = true; document.fonts.ready.then(() => drawCard()); FONTS.forEach(f => { try { document.fonts.load(f.css.replace('{s}', '40')).then(() => drawCard()); } catch (e) {} }); }
 }
 function wrap(ctx, text, maxW) {
   const words = text.split(' '), lines = []; let line = '';
   words.forEach(w => { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; });
   if (line) lines.push(line); return lines;
 }
-async function drawCard() {
-  const c = document.getElementById('card'); if (!c || !SH) return;
-  try { await document.fonts.ready; } catch (e) {}
-  const ctx = c.getContext('2d'), W = c.width, H = c.height, story = SH.fmt === 'story';
-  const v = verse(SH.id), text = SH.text || v.text;
-  const bg = story ? '#F7F2E8' : '#4F5D3A', ink = story ? '#2B2A26' : '#FBF8F1', accent = story ? '#7A5D1F' : '#E3D7B8', soft = story ? '#6B655A' : '#E3D7B8';
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+function drawCard() { const c = document.getElementById('card'); if (c && SH) drawTo(c, SH.fmt); }
+function drawTo(c, fmt) {
+  const D = designPrefs(), F = FORMATS[fmt];
+  if (c.width !== F.w || c.height !== F.h) { c.width = F.w; c.height = F.h; }
+  const ctx = c.getContext('2d'), W = c.width, H = c.height;
+  const v = verse(SH.id); let text = SH.text || v.text;
+  const tw = text.split(' '); if (tw.length > 70) text = tw.slice(0, 55).join(' ').replace(/[,;:]$/, '') + ' …';
+  const bg = BGS.find(b => b.id === D.bg) || BGS[0];
+  ctx.save(); ctx.shadowColor = 'transparent';
+  if (PHOTO) {
+    const im = PHOTO.img, sc = Math.max(W / im.width, H / im.height), dw = im.width * sc, dh = im.height * sc;
+    ctx.drawImage(im, (W - dw) / 2, (H - dh) / 2, dw, dh);
+  } else if (bg.b) { const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, bg.a); g.addColorStop(1, bg.b); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  else { ctx.fillStyle = bg.a; ctx.fillRect(0, 0, W, H); }
+  const ink = D.ink !== 'auto' ? D.ink : PHOTO ? 'light' : bg.ink;
+  if (PHOTO && D.shade) { ctx.fillStyle = ink === 'light' ? `rgba(0,0,0,${D.shade / 100})` : `rgba(255,253,248,${D.shade / 100})`; ctx.fillRect(0, 0, W, H); }
+  const col = ink === 'light' ? { text: '#FFFDF8', accent: 'rgba(255,248,232,.9)', soft: 'rgba(255,248,232,.75)', line: 'rgba(255,248,232,.55)' } : { text: '#2B2A26', accent: '#7A5D1F', soft: '#6B655A', line: '#B08A3E' };
+  if (PHOTO && ink === 'light') { ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 18; }
+  const f = FONTS.find(x => x.id === D.font) || FONTS[0];
+  const left = D.align === 'left', margin = Math.round(W * 0.11), maxW = W - margin * 2, x = left ? margin : W / 2;
+  ctx.textAlign = left ? 'left' : 'center'; ctx.textBaseline = 'alphabetic';
+  if (f.upper) text = text.toUpperCase();
+  let size = Math.round(F.base * (f.scale || 1) * D.size / 100), lines;
+  const room = H * (fmt === 'story' ? 0.52 : 0.58);
+  for (;;) { ctx.font = f.css.replace('{s}', size); lines = wrap(ctx, text, maxW); if (lines.length * size * f.lh < room || size < 24) break; size -= 2; }
+  const lh = size * f.lh, blockH = lines.length * lh;
+  const top = (H - blockH) / 2 + size * 0.8 - (fmt === 'story' ? 30 : 20);
   if (SH.label) {
-    ctx.font = '800 30px Nunito, sans-serif'; const lbl = 'PLANTED IN MY HEART';
-    const lw = ctx.measureText(lbl).width + 30 * 0.18 * lbl.length + 60;
-    ctx.strokeStyle = story ? '#C9BB98' : '#8E9A72'; ctx.lineWidth = 3;
-    const y = story ? 170 : 90; roundRect(ctx, (W - lw) / 2, y, lw, 76, 38); ctx.stroke();
-    ctx.fillStyle = story ? '#4F5D3A' : '#E3D7B8'; spaced(ctx, lbl, W / 2, y + 49, 5);
-  }
-  let size = story ? 84 : 66; const maxW = W - (story ? 200 : 180);
-  let lines;
-  for (;;) { ctx.font = `${story ? '' : 'italic '}500 ${size}px "Cormorant Garamond", Georgia, serif`; lines = wrap(ctx, story ? text : '“' + text + '”', maxW); if (lines.length * size * 1.3 < H * (story ? 0.5 : 0.52) || size < 40) break; size -= 4; }
-  const lh = size * 1.3, blockH = lines.length * lh, top = (H - blockH) / 2 + size * 0.8 - (story ? 20 : 30);
-  if (story) { ctx.strokeStyle = '#B08A3E'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(W / 2 - 50, top - size - 40); ctx.lineTo(W / 2 + 50, top - size - 40); ctx.stroke(); }
-  ctx.fillStyle = ink; lines.forEach((l, i) => ctx.fillText(l, W / 2, top + i * lh));
-  ctx.font = '800 32px Nunito, sans-serif'; ctx.fillStyle = accent;
-  spaced(ctx, (v.ref + ' · ' + SH.ver.abbr).toUpperCase(), W / 2, top + blockH + 50, 5);
-  ctx.font = '600 44px "Cormorant Garamond", Georgia, serif'; ctx.fillStyle = soft; ctx.fillText('Hidden Word', W / 2, H - (story ? 110 : 70));
+    ctx.font = '800 28px Nunito, sans-serif'; const lbl = 'PLANTED IN MY HEART';
+    const lw = ctx.measureText(lbl).width + 4 * lbl.length + 56, y = Math.max(70, top - size - 150);
+    ctx.strokeStyle = col.line; ctx.lineWidth = 3; roundRect(ctx, left ? margin : (W - lw) / 2, y, lw, 70, 35); ctx.stroke();
+    ctx.fillStyle = col.accent; spaced(ctx, lbl, left ? margin + 28 : W / 2, y + 45, 4, left);
+  } else if (!left) { ctx.strokeStyle = col.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(W / 2 - 46, top - size - 36); ctx.lineTo(W / 2 + 46, top - size - 36); ctx.stroke(); }
+  ctx.font = f.css.replace('{s}', size); ctx.fillStyle = col.text;
+  lines.forEach((l, i) => ctx.fillText(l, x, top + i * lh));
+  const refLine = [D.showRef ? v.ref : '', D.showVer ? SH.ver.abbr : ''].filter(Boolean).join(' · ');
+  if (refLine) { ctx.font = '800 30px Nunito, sans-serif'; ctx.fillStyle = col.accent; spaced(ctx, refLine.toUpperCase(), x, top + blockH + 46, 5, left); }
+  ctx.shadowColor = 'transparent';
+  ctx.font = '600 42px "Cormorant Garamond", Georgia, serif'; ctx.fillStyle = col.soft; ctx.textAlign = 'center';
+  ctx.fillText('Hidden Word', W / 2, H - (fmt === 'story' ? 110 : 64));
+  ctx.restore();
 }
-function spaced(ctx, s, x, y, sp) {
-  const w = ctx.measureText(s).width + sp * (s.length - 1); let cx = x - w / 2; ctx.textAlign = 'left';
-  for (const ch of s) { ctx.fillText(ch, cx, y); cx += ctx.measureText(ch).width + sp; } ctx.textAlign = 'center';
+function spaced(ctx, s, x, y, sp, fromLeft) {
+  const w = ctx.measureText(s).width + sp * (s.length - 1); let cx = fromLeft ? x : x - w / 2; const al = ctx.textAlign; ctx.textAlign = 'left';
+  for (const ch of s) { ctx.fillText(ch, cx, y); cx += ctx.measureText(ch).width + sp; } ctx.textAlign = al;
 }
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-async function shareImage() {
-  const c = document.getElementById('card'); const v = verse(SH.id);
-  const blob = await new Promise(r => c.toBlob(r, 'image/png'));
-  const file = new File([blob], 'hidden-word-' + SH.id.replace(/\./g, '-') + '.png', { type: 'image/png' });
-  try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: v.ref }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); toast('Image saved');
+function dataURLtoBlob(u) { const [h, b] = u.split(','), bin = atob(b), arr = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i); return new Blob([arr], { type: h.split(':')[1].split(';')[0] }); }
+function shareTo(target) {
+  const fmt = { igstory: 'story', igpost: 'post', facebook: 'post' }[target] || SH.fmt;
+  const off = document.createElement('canvas'); drawTo(off, fmt);
+  const blob = dataURLtoBlob(off.toDataURL('image/jpeg', 0.92)); // built right away so the phone still counts this as your tap
+  const v = verse(SH.id), name = 'hidden-word-' + SH.id.replace(/[.:]/g, '-') + '-' + fmt + '.jpg';
+  const file = new File([blob], name, { type: 'image/jpeg' });
+  const hint = { igstory: 'Pick Instagram, then Story', igpost: 'Pick Instagram, then Post', facebook: 'Pick Facebook', save: 'Pick “Save Image” to keep it in Photos' }[target];
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    if (hint) toast(hint);
+    navigator.share({ files: [file], title: v.ref }).catch(e => { if (e && e.name !== 'AbortError') downloadBlob(blob, name); });
+    return;
+  }
+  downloadBlob(blob, name);
+  if (target !== 'save') toast('Image saved. Open ' + (target === 'facebook' ? 'Facebook' : 'Instagram') + ' and post it from your photos.');
 }
+function downloadBlob(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast('Image saved'); }
 async function invite() {
   const v = verse(SH.id); const url = location.origin + location.pathname + '#practice/' + encodeURIComponent(SH.id);
   const text = `I’m memorizing ${v.ref}. Memorize it with me on Hidden Word:`;
@@ -699,20 +1140,112 @@ async function invite() {
   try { await navigator.clipboard.writeText(text + ' ' + url); toast('Invite link copied'); } catch (e) { toast(url); }
 }
 
+/* ---------- Read aloud ---------- */
+let SPEAKING = false, VOICE = null, warnedSilent = false;
+const RATES = [['slower', 'Slower', 0.6], ['slow', 'Slow', 0.75], ['normal', 'Normal', 0.9], ['faster', 'Faster', 1.1]];
+function rateNow() { const r = RATES.find(x => x[0] === ((S.speech || {}).rate)); return r ? r[2] : 0.9; }
+function englishVoices() { return 'speechSynthesis' in window ? speechSynthesis.getVoices().filter(v => /^en(-|_|$)/i.test(v.lang)) : []; }
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const vs = englishVoices();
+  const chosen = S.speech && S.speech.voice && vs.find(v => v.name === S.speech.voice); if (chosen) return chosen;
+  const pref = ['Samantha', 'Daniel', 'Karen', 'Moira', 'Google US English', 'Microsoft Aria', 'Microsoft Jenny', 'Alex'];
+  return pref.map(n => vs.find(v => v.name.includes(n))).find(Boolean) || vs.find(v => /en-US/i.test(v.lang) && v.localService) || vs.find(v => /en-US/i.test(v.lang)) || vs[0] || null;
+}
+if ('speechSynthesis' in window) { VOICE = pickVoice(); try { speechSynthesis.addEventListener('voiceschanged', () => { VOICE = pickVoice(); if (ROUTE.startsWith('#versions')) render(); }); } catch (e) {} }
+function spokenRef(ref) {
+  const ORD = { 1: 'First', 2: 'Second', 3: 'Third' };
+  return String(ref || '')
+    .replace(/^([123])\s+(?=[A-Za-z])/, (m, n) => ORD[n] + ' ')
+    .replace(/(\d+):(\d+)\s*[–—-]\s*(\d+):(\d+)/g, '$1, verse $2, through chapter $3, verse $4')
+    .replace(/(\d+):(\d+)\s*(?:[–—-]|\bto\b)\s*(\d+)/g, '$1, verses $2 through $3')
+    .replace(/(\d+):(\d+)/g, '$1, verse $2')
+    .replace(/^Psalms\b/, 'Psalm');
+}
+function spoken(t) { return t.replace(/\bLORD\b/g, 'Lord').replace(/\bGOD\b/g, 'God').replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim(); }
+function chunks(t) {
+  const parts = t.match(/[^.;:!?]+[.;:!?]*/g) || [t], out = []; let cur = '';
+  parts.forEach(p => { if ((cur + p).length > 180 && cur) { out.push(cur.trim()); cur = p; } else cur += p; });
+  if (cur.trim()) out.push(cur.trim()); return out;
+}
+function setSpeakBtns(on) { document.querySelectorAll('[data-act=listen]').forEach(b => { b.setAttribute('aria-label', on ? 'Stop reading' : 'Listen'); b.classList.toggle('speaking', on); const lbl = b.dataset.say === 'sample' ? (on ? ' Stop' : ' Play a sample') : ''; b.innerHTML = (on ? svg('M7 7h10v10H7z', 20, null, 2) : svg(UI.speaker, 22, null, 1.8)) + lbl; }); }
+function stopSpeaking() { SPEAKING = false; try { speechSynthesis.cancel(); } catch (e) {} setSpeakBtns(false); }
+function speakToggle(which) {
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') { toast('Reading aloud isn’t available in this browser. Try Safari or Chrome.'); return; }
+  if (SPEAKING) { stopSpeaking(); return; }
+  let ref = '', text = '';
+  if (which === 'chain' && C && C.text) { ref = rangeRef(C.p, C.k); text = C.text; }
+  else if (which === 'review' && R && R.q[R.i]) { ref = refOf(R.q[R.i]); text = R.text || verse(R.q[R.i]).text; }
+  else if (which === 'sample') { ref = 'Psalm 119:11'; text = LIB['PSA.119.11'].text; }
+  else if (P && P.text) { ref = refOf(P.id); text = P.text; }
+  if (!text) { toast('One moment, the verse is still opening'); return; }
+  const pieces = [spokenRef(ref)].concat(chunks(spoken(text)));
+  try { speechSynthesis.cancel(); } catch (e) {}
+  SPEAKING = true; setSpeakBtns(true);
+  let i = 0, started = false;
+  const next = () => {
+    if (!SPEAKING) return;
+    if (i >= pieces.length) { stopSpeaking(); return; }
+    const u = new SpeechSynthesisUtterance(pieces[i++]);
+    u.lang = (VOICE && VOICE.lang) || 'en-US'; if (VOICE) u.voice = VOICE; u.rate = rateNow(); u.pitch = 1;
+    u.onstart = () => { started = true; };
+    u.onend = () => setTimeout(next, 250);
+    u.onerror = e => { if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; stopSpeaking(); toast('Couldn’t read aloud. Check your volume and try again.'); };
+    speechSynthesis.speak(u);
+    try { speechSynthesis.resume(); } catch (e) {}
+  };
+  setTimeout(next, 150); // Safari drops speech that starts right after cancel()
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !warnedSilent) {
+    warnedSilent = true;
+    setTimeout(() => { if (SPEAKING) toast('No sound? Flip off the silent switch on the side of your iPhone and turn up the volume.'); }, 1800);
+  }
+  setTimeout(() => { if (SPEAKING && !started) { stopSpeaking(); toast('Your device didn’t start reading. Check that the volume is up and silent mode is off.'); } }, 4000);
+}
+
 /* ---------- Actions ---------- */
 const ACT = {
-  more() { if (P.level >= 3) { plant(P.id); P.level = 4; } else P.level++; render(); },
+  more() { if (P.level >= LAST) { plant(P.id); P.level = DONE; } else P.level++; render(); },
   less() { P.level = Math.max(0, P.level - 1); render(); },
   again() { P.level = 0; render(); },
   peek(el) { el.classList.add('peek'); setTimeout(() => el.classList.remove('peek'), 1400); },
-  listen() {
-    if (!('speechSynthesis' in window) || !P || !P.text) return toast('Listening isn’t available on this device');
-    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(refOf(P.id) + '. ' + P.text); u.rate = 0.85; speechSynthesis.speak(u);
-  },
+  listen(el) { speakToggle(el.dataset.say || 'practice'); },
   letters() { R.stage = 'letters'; render(); },
   reveal() { R.stage = 'shown'; render(); },
   knew() { grade(true); },
   missed() { grade(false); },
+  cmore() { if (C.level >= LAST) C.level = DONE; else C.level++; render(); },
+  cless() { C.level = Math.max(0, C.level - 1); render(); },
+  setrate(el) { S.speech.rate = el.dataset.k; save(); stopSpeaking(); render(); speakToggle('sample'); },
+  welpick(el) { WEL.pick = +el.dataset.i; WEL.custom = ''; render(); },
+  welnext() {
+    const idea = WEL.custom ? null : IDEAS[WEL.pick];
+    if (idea && idea.passages) { S.onboarded = true; S.homeTab = 'passages'; save(); WEL = null; go('#home'); return; }
+    WEL.keep = {}; go('#firstcoll');
+  },
+  welskip() { S.onboarded = true; save(); WEL = null; go('#home'); },
+  welkeep(el) { const id = el.dataset.id; WEL.keep[id] = WEL.keep[id] === false; render(); },
+  welstart() {
+    const idea = WEL.custom ? null : IDEAS[WEL.pick];
+    const ids = idea ? idea.ids.filter(id => WEL.keep[id] !== false) : [];
+    const c = makeCollection(WEL.custom || idea.label, idea ? idea.icon : 'leaf', idea ? idea.color : 'olive', ids);
+    if (ids.length && !S.focus) S.focus = ids[0];
+    S.onboarded = true; save(); WEL = null;
+    if (ids.length) { toast(`“${c.name}” is ready`); go('#home'); }
+    else { ADD = { q: '', results: [], picked: null, colls: { [c.id]: true }, note: '', busy: false, msg: '' }; go('#add'); }
+  },
+  mmtoggle(el) { MM.off[el.dataset.id] = !MM.off[el.dataset.id]; render(); },
+  mmsave() {
+    const [kind, key] = MM.arg.split(':');
+    const subj = kind === 's' ? SUBJECTS.find(x => x.id === key) : null, pas = kind === 'p' ? PASS[key] : null;
+    const ids = subj ? subj.ids.filter(id => !MM.off[id]) : ['P:' + pas.id];
+    const name = (MM.name || '').trim() || (subj ? subj.name : pas.name);
+    const c = makeCollection(name, subj ? subj.icon : pas.icon, subj ? 'olive' : 'gold', ids);
+    save(); MM = null; toast(`“${c.name}” added to your collections`); go('#collection/' + c.id);
+  },
+  hometab(el) { S.homeTab = el.dataset.k; save(); render(); },
+  setfocus(el) { S.focus = el.dataset.id; save(); FQ = ''; toast(refOf(S.focus) + ' is your focus verse'); go('#home'); },
+  clearfocus() { S.focus = null; save(); toast('The app will suggest verses'); go('#home'); },
+  togglefocus(el) { const id = el.dataset.id; S.focus = S.focus === id ? null : id; save(); toast(S.focus ? refOf(id) + ' is your focus verse' : 'Focus cleared'); render(); },
   pickcoll(el) {
     const c = S.collections.find(x => x.id === el.dataset.id), id = el.dataset.v; if (!c) return;
     if (c.ids.includes(id)) { c.ids = c.ids.filter(x => x !== id); save(); toast(`Removed from “${c.name}”`); }
@@ -743,9 +1276,15 @@ const ACT = {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hidden-word-backup-' + today() + '.json'; document.body.appendChild(a); a.click(); a.remove();
   },
   fmt(el) { SH.fmt = el.dataset.k; render(); },
-  shareimg() { shareImage(); },
+  dtab(el) { SH.tab = el.dataset.k; render(); },
+  dbg(el) { const D = designPrefs(); D.bg = el.dataset.k; PHOTO = null; if (D.ink !== 'auto') D.ink = 'auto'; save(); render(); },
+  dphoto(el) { const p = BG_PHOTOS.find(x => x.id === el.dataset.k); if (!p) return; const img = new Image(); img.onload = () => { PHOTO = { id: p.id, img }; render(); }; img.onerror = () => toast('That photo couldn\u2019t be loaded'); img.src = p.src; },
+  dfont(el) { designPrefs().font = el.dataset.k; save(); render(); },
+  dalign(el) { designPrefs().align = el.dataset.k; save(); render(); },
+  dink(el) { designPrefs().ink = el.dataset.k; save(); render(); },
+  shareto(el) { shareTo(el.dataset.k); },
   invite() { invite(); },
-  closeShare() { history.length > 1 ? history.back() : go('#home'); }
+  closeShare() { nav(PREV && !PREV.startsWith('#share') ? PREV : '#home'); }
 };
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el) return;
@@ -757,11 +1296,12 @@ document.addEventListener('keydown', e => {
 document.addEventListener('submit', e => {
   if (e.target.dataset.form === 'search') { e.preventDefault(); const q = document.getElementById('q').value.trim(); if (q) runSearch(q); }
 });
-window.addEventListener('hashchange', () => { const h = location.hash; if (!h.startsWith('#review')) R = null; if (!h.startsWith('#practice')) P = null; if (!h.startsWith('#add') && !h.startsWith('#newcollection')) ADD = null; if (!h.startsWith('#newcollection')) NC = null; if (!h.startsWith('#share')) SH = null; });
+
 
 /* ---------- Start ---------- */
+if (!S.onboarded) { if (Object.keys(S.progress).length || S.mine.length || S.collections.length) { S.onboarded = true; save(); } else if (!location.hash || location.hash === '#home') { ROUTE = '#welcome'; } }
 render();
-connect().then(() => { if (apiOK && /^#(versions|add)/.test(location.hash)) render(); });
+connect().then(() => { if (apiOK && /^#(versions|add)/.test(ROUTE)) render(); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 </script>
 </body>
