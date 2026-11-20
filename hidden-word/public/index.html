@@ -101,6 +101,14 @@ label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:70
 canvas.preview{width:100%;max-width:240px;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(60,50,30,.18);align-self:center}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;z-index:9;max-width:90vw;text-align:center}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.handle{width:44px;height:44px;margin-left:-10px;border:none;background:none;color:#9A907E;touch-action:none;cursor:grab;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:12px}
+.handle:active{cursor:grabbing}
+.ghost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;box-shadow:0 14px 34px rgba(60,50,30,.25);opacity:.96;margin:0}
+.dragging{opacity:.35}
+[data-drop].over{border:2px solid var(--olive);background:#F1F3EA;transform:scale(1.02)}
+[data-drop]{transition:transform .12s,background .12s}
+body.is-dragging{user-select:none;-webkit-user-select:none}
+.picker{display:flex;flex-wrap:wrap;gap:8px;padding:4px 2px 2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -457,16 +465,70 @@ function progress() {
 function verses() {
   const inColl = new Set(S.collections.flatMap(c => c.ids));
   const unsorted = S.mine.filter(id => !inColl.has(id));
+  const sorted = S.mine.filter(id => inColl.has(id));
   $app.innerHTML = `
     <div class="top" style="align-items:flex-end"><div class="stack4"><h1>My Verses</h1><p class="muted">Your collections, named your way.</p></div>
       <a href="#add" class="round" style="background:var(--olive);color:#FBF8F1;border:none;width:50px;height:50px" aria-label="Add a verse">${svg(UI.plus, 22, null, 2.2)}</a></div>
     <div class="stack">
-      ${S.collections.map(c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card row" href="#collection/${c.id}"><span class="ibox" style="background:${col.tint}">${svg(ICONS[c.icon] || ICONS.leaf, 24, col.ink, 1.6)}</span><span class="grow stack4"><b class="serif" style="font-size:22px;line-height:1.1">${esc(c.name)}</b><span class="muted small">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></span>${svg(UI.chev, 18, '#9A907E', 2)}</a>`; }).join('')}
+      ${S.collections.map(c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card row" href="#collection/${c.id}" data-drop="${c.id}"><span class="ibox" style="background:${col.tint}">${svg(ICONS[c.icon] || ICONS.leaf, 24, col.ink, 1.6)}</span><span class="grow stack4"><b class="serif" style="font-size:22px;line-height:1.1">${esc(c.name)}</b><span class="muted small">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></span>${svg(UI.chev, 18, '#9A907E', 2)}</a>`; }).join('')}
       ${S.collections.length ? '' : '<p class="empty">Make a collection for any season of life, like “When I’m anxious” or “For my kids.”</p>'}
       <a class="card row" href="#newcollection" style="justify-content:center;border:1.5px dashed var(--line2);background:transparent;color:var(--olive);font-weight:700;min-height:56px">${svg(UI.plus, 18, null, 2.2)} New collection</a>
     </div>
-    ${unsorted.length ? `<div class="stack"><h2>Not sorted yet</h2>${unsorted.map(id => verseRow(id)).join('')}</div>` : ''}`;
+    ${unsorted.length ? `<div class="stack"><h2>Not sorted yet</h2><p class="muted small">${S.collections.length ? 'Drag a verse by its ⠇⠇ handle onto a collection, or tap the handle to choose one.' : 'Make a collection above, then drag verses into it.'}</p>${unsorted.map(id => dragRow(id)).join('')}</div>` : ''}
+    ${sorted.length ? `<div class="stack"><h2>All my verses</h2><p class="muted small">A verse can live in more than one collection.</p>${sorted.map(id => dragRow(id)).join('')}</div>` : ''}`;
 }
+const GRIP = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+function dragRow(id) {
+  const v = verse(id); if (!v) return '';
+  const open = MOVE === id;
+  return `<div class="card dragrow" data-id="${esc(id)}"><div class="row">
+    <button class="handle" data-drag="${esc(id)}" aria-label="Move ${esc(v.ref)} to a collection" aria-expanded="${open}">${GRIP}</button>
+    <a class="grow stack4" href="#practice/${encodeURIComponent(id)}" style="color:var(--ink)"><span class="vname">${esc(v.ref)}</span><span class="vtext ell">${esc(v.text)}</span></a>${statusTag(id)}</div>
+    ${open ? `<div class="picker"><span class="muted small" style="width:100%;font-weight:700">Add to:</span>${S.collections.map(c => { const inIt = c.ids.includes(id); return `<button class="chip ${inIt ? 'on' : ''}" data-act="pickcoll" data-id="${c.id}" data-v="${esc(id)}" aria-pressed="${inIt}">${esc(c.name)}</button>`; }).join('')}<a class="chip dash" href="#newcollection">${svg(UI.plus, 14, null, 2.6)} New</a></div>` : ''}
+  </div>`;
+}
+function addToCollection(cid, id) {
+  const c = S.collections.find(x => x.id === cid); if (!c) return;
+  if (c.ids.includes(id)) { toast(`Already in “${c.name}”`); return; }
+  c.ids.push(id); save(); toast(`${refOf(id)} added to “${c.name}”`);
+}
+
+/* Drag and drop (mouse and touch) */
+let MOVE = null, DRAG = null;
+document.addEventListener('pointerdown', e => {
+  const h = e.target.closest('[data-drag]'); if (!h) return;
+  const src = h.closest('.dragrow'), r = src.getBoundingClientRect();
+  DRAG = { id: h.dataset.drag, src, x0: e.clientX, y0: e.clientY, dx: e.clientX - r.left, dy: e.clientY - r.top, w: r.width, moved: false, ghost: null, over: null };
+  try { h.setPointerCapture(e.pointerId); } catch (err) {}
+});
+document.addEventListener('pointermove', e => {
+  if (!DRAG) return;
+  if (!DRAG.moved) {
+    if (Math.hypot(e.clientX - DRAG.x0, e.clientY - DRAG.y0) < 6) return;
+    if (!S.collections.length) { DRAG = null; toast('Make a collection first'); return; }
+    DRAG.moved = true; MOVE = null;
+    const g = DRAG.src.cloneNode(true); g.classList.add('ghost'); g.style.width = DRAG.w + 'px';
+    document.body.appendChild(g); DRAG.ghost = g; DRAG.src.classList.add('dragging'); document.body.classList.add('is-dragging');
+  }
+  e.preventDefault();
+  DRAG.ghost.style.transform = `translate(${e.clientX - DRAG.dx}px, ${e.clientY - DRAG.dy}px) rotate(-1.5deg)`;
+  const el = document.elementFromPoint(e.clientX, e.clientY), t = el && el.closest('[data-drop]');
+  if (DRAG.over && DRAG.over !== t) DRAG.over.classList.remove('over');
+  if (t) t.classList.add('over'); DRAG.over = t;
+  if (e.clientY < 70) window.scrollBy(0, -12); else if (e.clientY > innerHeight - 110) window.scrollBy(0, 12);
+}, { passive: false });
+function endDrag() {
+  if (!DRAG) return;
+  const d = DRAG; DRAG = null;
+  if (d.ghost) d.ghost.remove();
+  d.src.classList.remove('dragging'); document.body.classList.remove('is-dragging');
+  if (d.over) d.over.classList.remove('over');
+  if (d.moved) { if (d.over) { addToCollection(d.over.dataset.drop, d.id); render(); } }
+  else { MOVE = MOVE === d.id ? null : d.id; render(); }
+}
+document.addEventListener('pointerup', endDrag);
+document.addEventListener('pointercancel', endDrag);
+document.addEventListener('click', e => { if (e.target.closest('[data-drop]') && document.body.classList.contains('is-dragging')) e.preventDefault(); }, true);
 function collection(cid) {
   const c = S.collections.find(x => x.id === cid); if (!c) return go('#verses');
   const col = COLORS[c.color] || COLORS.olive;
@@ -651,6 +713,12 @@ const ACT = {
   reveal() { R.stage = 'shown'; render(); },
   knew() { grade(true); },
   missed() { grade(false); },
+  pickcoll(el) {
+    const c = S.collections.find(x => x.id === el.dataset.id), id = el.dataset.v; if (!c) return;
+    if (c.ids.includes(id)) { c.ids = c.ids.filter(x => x !== id); save(); toast(`Removed from “${c.name}”`); }
+    else addToCollection(c.id, id);
+    render();
+  },
   pick(el) { ADD.picked = +el.dataset.i; const n = document.getElementById('note'); if (n) ADD.note = n.value; render(); },
   togglecoll(el) { const n = document.getElementById('note'); if (n) ADD.note = n.value; ADD.colls[el.dataset.id] = !ADD.colls[el.dataset.id]; render(); },
   saveverse() { saveVerse(); },
