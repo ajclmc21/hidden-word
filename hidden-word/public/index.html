@@ -22,11 +22,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&family=Caveat:wght@600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 <style>
-:root{--gold:linear-gradient(180deg,#8C6A2A 0%,#D9B45A 28%,#F4E2A8 50%,#C99A3F 72%,#8C6A2A 100%);--gold-h:linear-gradient(90deg,#8C6A2A 0%,#D9B45A 28%,#F4E2A8 50%,#C99A3F 72%,#8C6A2A 100%);--gold-line:#C9A45C;--cream:#F7F2E8;--paper:#FFFDF8;--line:#E6DDC9;--line2:#D9CCAE;--ink:#2B2A26;--ink2:#4A463E;--muted:#6B655A;--olive:#4F5D3A;--gold:#B08A3E;--goldtext:#7A5D1F;--sand:#EFE6D2;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Nunito',system-ui,-apple-system,sans-serif}
+:root{--cream:#F7F2E8;--paper:#FFFDF8;--line:#E6DDC9;--line2:#D9CCAE;--ink:#2B2A26;--ink2:#4A463E;--muted:#6B655A;--olive:#4F5D3A;--gold:#B08A3E;--goldtext:#7A5D1F;--sand:#EFE6D2;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Nunito',system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);-webkit-tap-highlight-color:transparent}
 #app{max-width:480px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 22px calc(112px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:20px;min-height:100vh}
-.sesscard{background:var(--paper);border:1.5px solid var(--gold-line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.sesscard{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px}
 #sessbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:8;width:calc(100% - 28px);max-width:452px;background:var(--ink);color:#FBF8F1;border-radius:999px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #sessbar[hidden]{display:none}
 #sessbar .t{flex:1;font-weight:700;font-size:15px}
@@ -39,21 +39,21 @@ body.in-session #app{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 .pres.dark{background:#1C1B18;color:#F7F2E8}
 .pres-top{display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 28px 0;gap:16px}
 .pres-ref{font-size:clamp(16px,2.4vw,30px);letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:#7A5D1F}
-.pres.dark .pres-ref{color:#E2C068}
+.pres.dark .pres-ref{color:#E3D7B8}
 .pres-mark{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:clamp(16px,2vw,24px);font-weight:600;opacity:.75}
 .pres-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:2vh 5vw;overflow:hidden}
 .pres-words{display:flex;flex-wrap:wrap;justify-content:center;column-gap:.28em;row-gap:.18em;font-family:var(--serif);font-weight:500;line-height:1.22;text-align:center;margin:0;max-width:1500px}
 .pres-words .w .h{border-bottom-width:.06em}
-.pres.dark .w .h{border-bottom-color:#D9B45A}
-.pres.dark .w .h.peek{color:#F4E2A8}
+.pres.dark .w .h{border-bottom-color:#B08A3E}
+.pres.dark .w .h.peek{color:#E3D7B8}
 .pres-bar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 16px calc(14px + env(safe-area-inset-bottom))}
 .pres-bar button{min-height:48px;min-width:48px;padding:0 18px;border-radius:999px;border:1px solid rgba(128,110,70,.35);background:rgba(255,255,255,.6);color:inherit;font:inherit;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .pres.dark .pres-bar button{background:rgba(255,255,255,.07);border-color:rgba(226,192,104,.35)}
 .pres-bar button.main{background:#4F5D3A;color:#FBF8F1;border-color:#4F5D3A;min-width:150px;justify-content:center}
-.pres.dark .pres-bar button.main{background:#C9A45C;color:#1C1B18;border-color:#C9A45C}
+.pres.dark .pres-bar button.main{background:#E3D7B8;color:#1C1B18;border-color:#E3D7B8}
 .pres-dots{display:flex;gap:6px;padding:0 6px}
 .pres-dots i{width:22px;height:5px;border-radius:999px;background:rgba(128,110,70,.3)}
-.pres-dots i.on{background:var(--gold-h)}
+.pres-dots i.on{background:var(--olive)}
 .pres-tip{width:100%;text-align:center;font-size:12px;opacity:.6}
 .pres.hidebar .pres-bar{opacity:0;transition:opacity .4s}
 @media (max-width:640px){.pres-mark span+*,.pres-tip{display:none}.pres-mark{font-size:0;gap:0}.pres-top{padding-left:18px;padding-right:18px}}
@@ -88,16 +88,11 @@ p{margin:0}
 .bar>i{display:block;height:100%;background:var(--olive);border-radius:999px}
 .serif{font-family:var(--serif)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hero{position:relative;overflow:hidden;background:var(--olive);color:#FBF8F1;border-radius:22px;border:1.5px solid var(--gold-line);padding:20px 34px 32px 22px;display:flex;flex-direction:column;gap:12px}
-.hero .eyebrow{color:#EBCB7A}
-.gilt{position:relative;overflow:hidden}
-.gilt::after,.hero::after{content:'';position:absolute;top:0;bottom:0;right:0;width:12px;background:repeating-linear-gradient(180deg,rgba(110,78,18,.28) 0 1px,transparent 1px 3px),var(--gold);pointer-events:none}
-.gilt2::before,.hero::before{content:'';position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(90deg,rgba(110,78,18,.28) 0 1px,transparent 1px 3px),var(--gold-h);pointer-events:none}
-.gilt-sm::after{width:7px}
-.ruled::after{content:'';display:block;width:48px;height:2px;border-radius:2px;margin-top:7px;background:var(--gold-h)}
+.hero{background:var(--olive);color:#FBF8F1;border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.hero .eyebrow{color:#E3D7B8}
 .cap{display:inline-block;font-size:1.9em;line-height:.8;font-weight:600;background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:-.03em;vertical-align:-.08em;letter-spacing:0}
 .hero .cap{font-size:1.6em;font-style:normal}
-.logo{width:52px;height:52px;border-radius:999px;background:#2B2A26;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px var(--cream),0 0 0 4.5px #D9B45A;flex-shrink:0}
+.logo{width:52px;height:52px;border-radius:999px;background:var(--olive);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hero .lift{background:#FBF8F1;color:var(--olive);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px}
 .subj{display:flex;flex-direction:column;gap:8px}
 .subj b{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1}
@@ -108,18 +103,15 @@ p{margin:0}
 #tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;font-size:12px;font-weight:600;color:var(--muted)}
 #tabs a{position:relative}
 #tabs a.on{color:var(--olive);font-weight:800}
-#tabs a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:30px;height:3px;border-radius:0 0 3px 3px;background:var(--gold-h)}
 #tabs.hide{display:none}
-.practice{position:relative;overflow:hidden;flex:1;background:var(--paper);border:1.5px solid #E2CFA0;border-radius:26px;padding:30px 36px 38px 24px;display:flex;flex-direction:column;gap:18px;justify-content:center;min-height:340px}
+.practice{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:30px 24px;display:flex;flex-direction:column;gap:18px;justify-content:center;min-height:340px}
 .words{display:flex;flex-wrap:wrap;justify-content:center;column-gap:.3em;row-gap:10px;font-family:var(--serif);font-size:30px;line-height:1.25;text-align:center;font-weight:500}
 .w{white-space:nowrap}
 .w .h{color:transparent;border-bottom:2px solid var(--gold);cursor:pointer}
 .w .h.peek{color:var(--goldtext)}
 .dots{display:flex;gap:8px;justify-content:center}
 .dots i{width:28px;height:6px;border-radius:999px;background:#E2D8C2}
-.dots i.on{background:var(--gold-h)}
-.practice::after{content:'';position:absolute;top:0;bottom:0;right:0;width:12px;background:repeating-linear-gradient(180deg,rgba(110,78,18,.28) 0 1px,transparent 1px 3px),var(--gold);pointer-events:none}
-.practice::before{content:'';position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(90deg,rgba(110,78,18,.28) 0 1px,transparent 1px 3px),var(--gold-h);pointer-events:none}
+.dots i.on{background:var(--olive)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:var(--paper);color:var(--ink);font-size:14px;font-weight:600}
 .chip.on{background:var(--olive);border-color:var(--olive);color:#FBF8F1;font-weight:700}
@@ -129,7 +121,7 @@ textarea{resize:none}
 label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 .ibox{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
-.bigicon{width:118px;height:118px;border-radius:999px;background:#2B2A26;box-shadow:0 0 0 6px var(--cream),0 0 0 8px #D9B45A;margin-bottom:6px;display:flex;align-items:center;justify-content:center}
+.bigicon{width:112px;height:112px;border-radius:999px;background:var(--sand);display:flex;align-items:center;justify-content:center}
 .leafgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
 .stat b{display:block;font-family:var(--serif);font-size:30px;line-height:1;font-weight:600}
 .stat span{font-size:12px;color:var(--muted);font-weight:600}
@@ -377,10 +369,10 @@ function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e
 /* ---------- Helpers ---------- */
 const $app = document.getElementById('app');
 let GID = 0;
-function gsvg(d, size, sw) { const id = 'gg' + (++GID); return `<svg width="${size || 24}" height="${size || 24}" viewBox="0 0 24 24" fill="none" stroke="url(#${id})" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8C6A2A"/><stop offset=".45" stop-color="#E2C068"/><stop offset=".6" stop-color="#F4E2A8"/><stop offset="1" stop-color="#9C7430"/></linearGradient></defs><path d="${d}"/></svg>`; }
-function goldLeaf(filled) { const id = 'gl' + (++GID); return `<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8C6A2A"/><stop offset=".45" stop-color="#E2C068"/><stop offset=".6" stop-color="#F4E2A8"/><stop offset="1" stop-color="#9C7430"/></linearGradient></defs><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z" fill="${filled ? `url(#${id})` : 'none'}" stroke="${filled ? `url(#${id})` : '#C9B98F'}" stroke-width="1.3" stroke-linejoin="round"/></svg>`; }
+function gsvg(d, size, sw, color) { return `<svg width="${size || 24}" height="${size || 24}" viewBox="0 0 24 24" fill="none" stroke="${color || '#4F5D3A'}" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`; }
+function goldLeaf(filled) { return `<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z" fill="${filled ? '#E3D7B8' : 'none'}" stroke="${filled ? '#E3D7B8' : '#B9C2A2'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`; }
 const SPROUT_D = 'M12 21v-8M12 13c0-4 3-7 7-7 0 4-3 7-7 7zM12 15c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5zM8 21h8';
-function logo(size) { return `<span class="logo" style="width:${size}px;height:${size}px" aria-hidden="true">${gsvg(SPROUT_D, Math.round(size * 0.56), 1.5)}</span>`; }
+function logo(size) { return `<span class="logo" style="width:${size}px;height:${size}px" aria-hidden="true">${gsvg(SPROUT_D, Math.round(size * 0.56), 1.5, '#FBF8F1')}</span>`; }
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const svg = (d, size, color, sw) => `<svg width="${size || 24}" height="${size || 24}" viewBox="0 0 24 24" fill="none" stroke="${color || 'currentColor'}" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 const today = () => new Date().toISOString().slice(0, 10);
@@ -588,10 +580,10 @@ function home() {
   const stLabel = { new: 'Not started', due: 'Ready to review', growing: 'Growing', memorized: 'Memorized' }[status(tid)];
   const fromColl = S.collections.find(c => c.ids.includes(tid));
   const label = hasFocus ? `My focus verse · ${stLabel}` : firstColl ? `Next up · ${esc(firstColl.name)}` : `Suggested verse · ${esc(started.name)}`;
-  const collCard = c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card gilt gilt-sm" href="#collection/${c.id}" style="padding-right:20px;flex:0 0 150px;display:flex;flex-direction:column;gap:10px;padding:14px"><span class="ibox" style="background:${col.tint};width:42px;height:42px;border-radius:12px">${svg(ICONS[c.icon] || ICONS.leaf, 22, col.ink, 1.6)}</span><b class="serif" style="font-size:20px;line-height:1.1">${esc(c.name)}</b><span class="muted small" style="font-size:12px">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></a>`; };
+  const collCard = c => { const col = COLORS[c.color] || COLORS.olive; const m = c.ids.filter(isMemorized).length; return `<a class="card" href="#collection/${c.id}" style="padding-right:20px;flex:0 0 150px;display:flex;flex-direction:column;gap:10px;padding:14px"><span class="ibox" style="background:${col.tint};width:42px;height:42px;border-radius:12px">${svg(ICONS[c.icon] || ICONS.leaf, 22, col.ink, 1.6)}</span><b class="serif" style="font-size:20px;line-height:1.1">${esc(c.name)}</b><span class="muted small" style="font-size:12px">${c.ids.length} verse${c.ids.length === 1 ? '' : 's'}${m ? ` · ${m} memorized` : ''}</span></a>`; };
   const packs = S.homeTab !== 'passages';
   $app.innerHTML = `
-    <div class="row" style="gap:14px;align-items:center">${logo(56)}<div class="stack4 ruled"><p class="eyebrow">Hidden Word</p><h1>${greet}</h1><p class="muted">Your verses, your way.</p></div></div>
+    <div class="row" style="gap:14px;align-items:center">${logo(56)}<div class="stack4"><p class="eyebrow">Hidden Word</p><h1>${greet}</h1><p class="muted">Your verses, your way.</p></div></div>
     ${sessionCard(false)}
     ${due.length ? `<a class="card row" href="#review" style="border:2px solid var(--gold)"><span class="ibox" style="background:#F1E4CC;border-radius:999px">${svg(UI.review, 24, '#7A5D1F', 1.8)}</span><span class="grow stack4"><b class="serif" style="font-size:21px">${due.length} verse${due.length > 1 ? 's' : ''} ready to review</b><span class="muted small">Keep them strong</span></span>${svg(UI.chev, 18, '#9A907E', 2)}</a>` : ''}
     <div class="stack" style="gap:8px">
@@ -603,7 +595,7 @@ function home() {
     <a href="#focus" class="row" style="justify-content:center;gap:6px;min-height:44px;font-size:15px;font-weight:700">${svg(UI.target, 18, null, 1.8)}${hasFocus ? 'Change my focus verse' : 'Choose a verse to focus on'}</a>
     </div>
     <div class="stack">
-      <div class="top" style="align-items:baseline"><h2 class="ruled" style="font-size:26px">My collections</h2>${S.collections.length ? '<a href="#verses" style="font-size:14px;font-weight:700;min-height:44px;display:flex;align-items:center">See all</a>' : ''}</div>
+      <div class="top" style="align-items:baseline"><h2 style="font-size:26px">My collections</h2>${S.collections.length ? '<a href="#verses" style="font-size:14px;font-weight:700;min-height:44px;display:flex;align-items:center">See all</a>' : ''}</div>
       <div class="hscroll" style="display:flex;gap:12px;overflow-x:auto;margin:0 -22px;padding:2px 22px 6px;scroll-snap-type:x proximity">
         ${S.collections.map(collCard).join('')}
         ${S.collections.length ? `<a href="#newcollection" class="card" style="flex:0 0 150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1.5px dashed var(--line2);background:transparent;color:var(--olive);font-weight:700;font-size:14px;text-align:center">${svg(UI.plus, 22, null, 2.2)}New collection</a>` :
@@ -612,7 +604,7 @@ function home() {
     </div>
     <a href="#add" class="card row" style="border:2px solid var(--olive)"><span class="ibox" style="background:var(--olive);border-radius:999px;width:44px;height:44px;color:#FBF8F1">${svg(UI.plus, 20, null, 2.4)}</span><span class="stack4"><b class="serif" style="font-size:21px">Add a verse</b><span class="muted small">Any verse in the Bible that means something to you</span></span></a>
     <div class="stack">
-      <div class="stack4"><h2 class="ruled" style="font-size:26px">Ideas to get you started</h2><p class="muted small">Starter packs you can make your own: rename them, remove verses or add your own.</p></div>
+      <div class="stack4"><h2 style="font-size:26px">Ideas to get you started</h2><p class="muted small">Starter packs you can make your own: rename them, remove verses or add your own.</p></div>
       <div class="seg" role="group" aria-label="Ideas"><button class="${packs ? 'on' : ''}" data-act="hometab" data-k="subjects" aria-pressed="${packs}">Starter packs</button><button class="${!packs ? 'on' : ''}" data-act="hometab" data-k="passages" aria-pressed="${!packs}">Passages</button></div>
       ${packs ? SUBJECTS.map(s => { const n = subjectCount(s); return `<div class="card row" style="gap:12px;padding:12px 14px"><a href="#subject/${s.id}" class="grow row" style="gap:12px;color:var(--ink)">${svg(ICONS[s.icon], 24, '#B08A3E', 1.6)}<span class="stack4"><b class="serif" style="font-size:20px;line-height:1.1">${esc(s.name)}</b><span class="muted small" style="font-size:12px">${n ? `${n} of ${s.ids.length} planted` : `${s.ids.length} verses · ${esc(s.desc)}`}</span></span></a><a href="#mine/s:${s.id}" class="pill" style="min-height:40px;font-size:13px;white-space:nowrap">Make it mine</a></div>`; }).join('')
         : `<p class="muted small">Longer passages, learned one verse at a time and linked together.</p>${PASSAGES.map(p => { const st = passageState(p); return `<div class="card row" style="gap:12px;padding:12px 14px"><a href="#passage/${p.id}" class="grow stack4" style="color:var(--ink)"><b class="serif" style="font-size:20px;line-height:1.1">${esc(p.name)}</b><span class="muted small" style="font-size:12px">${esc(p.ref)} · ${st.done ? 'Learned' : st.planted ? `${st.planted} of ${p.vids.length} planted` : `${p.vids.length} verses`}${p.kids ? ' · Kids' : ''}</span></a><a href="#mine/p:${p.id}" class="pill" style="min-height:40px;font-size:13px;white-space:nowrap">Make it mine</a></div>`; }).join('')}`}
@@ -711,7 +703,7 @@ function tickSession() {
   if (left <= 0 && !SESS.timeUp) { SESS.timeUp = true; try { navigator.vibrate && navigator.vibrate(120); } catch (e) {} }
   const C2 = 2 * Math.PI * 13;
   bar.hidden = false;
-  bar.innerHTML = `<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="4"/><circle cx="16" cy="16" r="13" fill="none" stroke="#C9A45C" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C2}" stroke-dashoffset="${C2 * (1 - frac)}" transform="rotate(-90 16 16)"/></svg>
+  bar.innerHTML = `<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="4"/><circle cx="16" cy="16" r="13" fill="none" stroke="#E3D7B8" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C2}" stroke-dashoffset="${C2 * (1 - frac)}" transform="rotate(-90 16 16)"/></svg>
     <span class="t" role="timer" aria-live="off">${SESS.timeUp ? 'Time’s up! Finish this one.' : fmtClock(left) + ' left in your ' + SESS.mins + ' minutes'}</span>
     <button data-act="sessend">${SESS.timeUp ? 'Finish' : 'End'}</button>`;
 }
@@ -758,7 +750,7 @@ function sessionSummary(r) {
 function sessionCard(compact) {
   const m = S.sessMins || 5;
   return `<div class="sesscard">
-    <div class="row" style="gap:12px;align-items:flex-start"><span class="ibox" style="background:#2B2A26;border-radius:999px;width:46px;height:46px">${gsvg('M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l2.5 2.5M9 2h6', 24, 1.8)}</span>
+    <div class="row" style="gap:12px;align-items:flex-start"><span class="ibox" style="background:var(--sand);border-radius:999px;width:46px;height:46px">${gsvg('M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l2.5 2.5M9 2h6', 24, 1.8)}</span>
       <span class="stack4"><b class="serif" style="font-size:22px;line-height:1.15">Spend ${m} minutes in the Word</b><span class="muted small">${dueList().length ? `Reviews first, then your verses. ` : ''}The app guides you, and stops when time’s up.</span></span></div>
     <div class="seg" role="group" aria-label="Minutes" style="grid-template-columns:repeat(3,1fr)">${[3, 5, 10].map(n => `<button class="${m === n ? 'on' : ''}" data-act="sessmins" data-n="${n}" aria-pressed="${m === n}">${n} min</button>`).join('')}</div>
     <button class="btn" data-act="sessstart">Start my ${m} minutes</button>
