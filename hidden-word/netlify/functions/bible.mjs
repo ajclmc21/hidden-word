@@ -15,7 +15,7 @@ const reply = (body, status = 200, maxAge = 86400) =>
   });
 
 export default async (req) => {
-  const key = process.env.API_BIBLE_KEY;
+  const key = (globalThis.Netlify && Netlify.env.get('API_BIBLE_KEY')) || process.env.API_BIBLE_KEY;
   if (!key) return reply({ error: 'API_BIBLE_KEY is not set in Netlify' }, 500);
 
   const p = new URL(req.url).searchParams;
@@ -29,6 +29,10 @@ export default async (req) => {
     const ref = p.get('ref') || '';
     if (!SAFE.test(bible) || !SAFE.test(ref)) return reply({ error: 'bad request' }, 400);
     target = `${BASE}/bibles/${bible}/passages/${ref}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false&include-verse-spans=false`;
+  } else if (action === 'chapter') {
+    const chapter = p.get('chapter') || '';
+    if (!SAFE.test(bible) || !SAFE.test(chapter)) return reply({ error: 'bad request' }, 400);
+    target = `${BASE}/bibles/${bible}/chapters/${chapter}/verses`;
   } else if (action === 'search') {
     const q = (p.get('q') || '').slice(0, 100);
     if (!SAFE.test(bible) || !q.trim()) return reply({ error: 'bad request' }, 400);
